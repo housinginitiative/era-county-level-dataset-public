@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.553">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>County Emergency Rental Assistance Spending: An Introduction to the Data</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="era-county-level-documentation_files/libs/clipboard/clipboard.min.js"></script>
+<script src="era-county-level-documentation_files/libs/quarto-html/quarto.js"></script>
+<script src="era-county-level-documentation_files/libs/quarto-html/popper.min.js"></script>
+<script src="era-county-level-documentation_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="era-county-level-documentation_files/libs/quarto-html/anchor.min.js"></script>
+<link href="era-county-level-documentation_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="era-county-level-documentation_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="era-county-level-documentation_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="era-county-level-documentation_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="era-county-level-documentation_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="era-county-level-documentation_files/libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="era-county-level-documentation_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="era-county-level-documentation_files/libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
+<script src="era-county-level-documentation_files/libs/datatables-binding-0.33/datatables.js"></script>
+<script src="era-county-level-documentation_files/libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="era-county-level-documentation_files/libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="era-county-level-documentation_files/libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
+<script src="era-county-level-documentation_files/libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="era-county-level-documentation_files/libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+<script src="era-county-level-documentation_files/libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+<link href="era-county-level-documentation_files/libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
+<script src="era-county-level-documentation_files/libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="era-county-level-documentation_files/libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
+<script src="era-county-level-documentation_files/libs/proj4-2.6.2/proj4.min.js"></script>
+<script src="era-county-level-documentation_files/libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="era-county-level-documentation_files/libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
+<script src="era-county-level-documentation_files/libs/leaflet-binding-2.2.2/leaflet.js"></script>
+<script src="era-county-level-documentation_files/libs/leaflet-providers-2.0.0/leaflet-providers_2.0.0.js"></script>
+<script src="era-county-level-documentation_files/libs/leaflet-providers-plugin-2.2.2/leaflet-providers-plugin.js"></script>
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#background" id="toc-background" class="nav-link active" data-scroll-target="#background">Background</a></li>
+  <li><a href="#data-sources" id="toc-data-sources" class="nav-link" data-scroll-target="#data-sources">Data sources</a>
+  <ul class="collapse">
+  <li><a href="#phpdfs" id="toc-phpdfs" class="nav-link" data-scroll-target="#phpdfs">PHPDFs</a></li>
+  <li><a href="#other-data" id="toc-other-data" class="nav-link" data-scroll-target="#other-data">Other data</a></li>
+  </ul></li>
+  <li><a href="#outputs" id="toc-outputs" class="nav-link" data-scroll-target="#outputs">Outputs</a></li>
+  <li><a href="#user-notes-and-data-limitations" id="toc-user-notes-and-data-limitations" class="nav-link" data-scroll-target="#user-notes-and-data-limitations">User notes and data limitations</a></li>
+  <li><a href="#data-cleaning-and-aggregation" id="toc-data-cleaning-and-aggregation" class="nav-link" data-scroll-target="#data-cleaning-and-aggregation">Data cleaning and aggregation</a></li>
+  <li><a href="#step-0-grantee-metadata" id="toc-step-0-grantee-metadata" class="nav-link" data-scroll-target="#step-0-grantee-metadata">Step 0: Grantee metadata</a></li>
+  <li><a href="#step-1-geocode" id="toc-step-1-geocode" class="nav-link" data-scroll-target="#step-1-geocode">Step 1: Geocode</a></li>
+  <li><a href="#step-2-initial-validation" id="toc-step-2-initial-validation" class="nav-link" data-scroll-target="#step-2-initial-validation">Step 2: Initial validation</a></li>
+  <li><a href="#step-3-deduplication" id="toc-step-3-deduplication" class="nav-link" data-scroll-target="#step-3-deduplication">Step 3: Deduplication</a>
+  <ul class="collapse">
+  <li><a href="#across-grantee" id="toc-across-grantee" class="nav-link" data-scroll-target="#across-grantee">Across-grantee</a></li>
+  <li><a href="#across-file" id="toc-across-file" class="nav-link" data-scroll-target="#across-file">Across-file</a></li>
+  <li><a href="#within-file" id="toc-within-file" class="nav-link" data-scroll-target="#within-file">Within-file</a></li>
+  <li><a href="#extent-of-duplication" id="toc-extent-of-duplication" class="nav-link" data-scroll-target="#extent-of-duplication">Extent of duplication</a></li>
+  </ul></li>
+  <li><a href="#step-4-county-imputation" id="toc-step-4-county-imputation" class="nav-link" data-scroll-target="#step-4-county-imputation">Step 4: County imputation</a>
+  <ul class="collapse">
+  <li><a href="#use-grantee-geography-for-countiessingle-county-cities" id="toc-use-grantee-geography-for-countiessingle-county-cities" class="nav-link" data-scroll-target="#use-grantee-geography-for-countiessingle-county-cities">Use grantee geography for counties/single-county cities</a></li>
+  <li><a href="#use-city-zip-county-crosswalk-for-states" id="toc-use-city-zip-county-crosswalk-for-states" class="nav-link" data-scroll-target="#use-city-zip-county-crosswalk-for-states">Use City + ZIP : county crosswalk for states</a></li>
+  <li><a href="#coalesce-county_geoid" id="toc-coalesce-county_geoid" class="nav-link" data-scroll-target="#coalesce-county_geoid">Coalesce <code>county_geoid</code></a></li>
+  </ul></li>
+  <li><a href="#step-5-variable-checks" id="toc-step-5-variable-checks" class="nav-link" data-scroll-target="#step-5-variable-checks">Step 5: Variable checks</a></li>
+  <li><a href="#step-6-thresholding" id="toc-step-6-thresholding" class="nav-link" data-scroll-target="#step-6-thresholding">Step 6: Thresholding</a></li>
+  <li><a href="#step-7-pre-aggregation" id="toc-step-7-pre-aggregation" class="nav-link" data-scroll-target="#step-7-pre-aggregation">Step 7: Pre-aggregation</a></li>
+  <li><a href="#step-8-aggregation" id="toc-step-8-aggregation" class="nav-link" data-scroll-target="#step-8-aggregation">Step 8: Aggregation</a></li>
+  <li><a href="#aggregation-outputs-data-dictionary" id="toc-aggregation-outputs-data-dictionary" class="nav-link" data-scroll-target="#aggregation-outputs-data-dictionary">Aggregation outputs data dictionary</a></li>
+  <li><a href="#data-citation" id="toc-data-citation" class="nav-link" data-scroll-target="#data-citation">Data Citation</a></li>
+  <li><a href="#aggregation-descriptives---county-month-dataset" id="toc-aggregation-descriptives---county-month-dataset" class="nav-link" data-scroll-target="#aggregation-descriptives---county-month-dataset">Aggregation Descriptives - County-Month Dataset</a>
+  <ul class="collapse">
+  <li><a href="#grantee-level---county-month-dataset" id="toc-grantee-level---county-month-dataset" class="nav-link" data-scroll-target="#grantee-level---county-month-dataset">Grantee Level - County-Month Dataset</a>
+  <ul class="collapse">
+  <li><a href="#number-of-grantees-by-type---county-month-dataset" id="toc-number-of-grantees-by-type---county-month-dataset" class="nav-link" data-scroll-target="#number-of-grantees-by-type---county-month-dataset">Number of Grantees by Type - County-Month Dataset</a></li>
+  <li><a href="#number-of-grantees-by-state-and-type---county-month-dataset" id="toc-number-of-grantees-by-state-and-type---county-month-dataset" class="nav-link" data-scroll-target="#number-of-grantees-by-state-and-type---county-month-dataset">Number of Grantees by State and Type - County-Month Dataset</a></li>
+  <li><a href="#spending-percentage-by-grantee---county-month-dataset" id="toc-spending-percentage-by-grantee---county-month-dataset" class="nav-link" data-scroll-target="#spending-percentage-by-grantee---county-month-dataset">Spending Percentage by Grantee - County-Month Dataset</a></li>
+  <li><a href="#grantees-passing-with-low-goodness-percentages---county-month-dataset" id="toc-grantees-passing-with-low-goodness-percentages---county-month-dataset" class="nav-link" data-scroll-target="#grantees-passing-with-low-goodness-percentages---county-month-dataset">Grantees Passing with Low Goodness Percentages - County-Month Dataset</a></li>
+  <li><a href="#grantees-with-low-allocation-spending---county-month-dataset" id="toc-grantees-with-low-allocation-spending---county-month-dataset" class="nav-link" data-scroll-target="#grantees-with-low-allocation-spending---county-month-dataset">Grantees with Low Allocation Spending - County-Month Dataset</a></li>
+  </ul></li>
+  <li><a href="#geographic-county-level---county-month-dataset" id="toc-geographic-county-level---county-month-dataset" class="nav-link" data-scroll-target="#geographic-county-level---county-month-dataset">Geographic County Level - County-Month Dataset</a>
+  <ul class="collapse">
+  <li><a href="#map-of-included-counties---county-month-dataset" id="toc-map-of-included-counties---county-month-dataset" class="nav-link" data-scroll-target="#map-of-included-counties---county-month-dataset">Map of Included Counties - County-Month Dataset</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#aggregation-descriptives---county-total-dataset" id="toc-aggregation-descriptives---county-total-dataset" class="nav-link" data-scroll-target="#aggregation-descriptives---county-total-dataset">Aggregation Descriptives - County-Total Dataset</a>
+  <ul class="collapse">
+  <li><a href="#grantee-level---county-total-dataset" id="toc-grantee-level---county-total-dataset" class="nav-link" data-scroll-target="#grantee-level---county-total-dataset">Grantee Level - County-Total Dataset</a>
+  <ul class="collapse">
+  <li><a href="#number-of-grantees-by-type---county-total-dataset" id="toc-number-of-grantees-by-type---county-total-dataset" class="nav-link" data-scroll-target="#number-of-grantees-by-type---county-total-dataset">Number of Grantees by Type - County-Total Dataset</a></li>
+  <li><a href="#number-of-grantees-by-state-and-type---county-total-dataset" id="toc-number-of-grantees-by-state-and-type---county-total-dataset" class="nav-link" data-scroll-target="#number-of-grantees-by-state-and-type---county-total-dataset">Number of Grantees by State and Type - County-Total Dataset</a></li>
+  <li><a href="#spending-percentage-by-grantee---county-total-dataset" id="toc-spending-percentage-by-grantee---county-total-dataset" class="nav-link" data-scroll-target="#spending-percentage-by-grantee---county-total-dataset">Spending Percentage by Grantee - County-Total Dataset</a></li>
+  <li><a href="#grantees-passing-with-low-goodness-percentages---county-total-dataset" id="toc-grantees-passing-with-low-goodness-percentages---county-total-dataset" class="nav-link" data-scroll-target="#grantees-passing-with-low-goodness-percentages---county-total-dataset">Grantees Passing with Low Goodness Percentages - County-Total Dataset</a></li>
+  <li><a href="#grantees-with-low-allocation-spending---county-total-dataset" id="toc-grantees-with-low-allocation-spending---county-total-dataset" class="nav-link" data-scroll-target="#grantees-with-low-allocation-spending---county-total-dataset">Grantees with Low Allocation Spending - County-Total Dataset</a></li>
+  </ul></li>
+  <li><a href="#geographic-county-level---county-total-dataset" id="toc-geographic-county-level---county-total-dataset" class="nav-link" data-scroll-target="#geographic-county-level---county-total-dataset">Geographic County Level - County-Total Dataset</a>
+  <ul class="collapse">
+  <li><a href="#map-of-included-counties---county-total-dataset" id="toc-map-of-included-counties---county-total-dataset" class="nav-link" data-scroll-target="#map-of-included-counties---county-total-dataset">Map of Included Counties - County-Total Dataset</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">County Emergency Rental Assistance Spending: An Introduction to the Data</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="background" class="level2">
+<h2 class="anchored" data-anchor-id="background">Background</h2>
+<p>The Federal Emergency Rental Assistance (ERA) program was administered by the U.S. Department of the Treasury to alleviate the impact of the COVID-19 pandemic on renter households.</p>
+<p>A total of $46.55 billion was distributed to state, territorial, county, city, and tribal governments through two programs: ERA1 ($25.55 billion authorized in December 2020 as part of the Consolidated Appropriations Act of 2021) and ERA2 ($21 billion included with the American Rescue Plan Act, passed March 2021). States, Washington, D.C., and territories were entitled to be ERA grantees. County and city governments were eligible to be ERA grantees if they met population requirements. Though Treasury set overall guidelines for the administration of the program, each grantee established its own mechanisms for the processing of applications and payments. Similarly, though Treasury published uniform data reporting requirements, each grantee had its own mechanisms for data collection and management.</p>
+<p>Over the course of the two programs, ERA funds could be used to address various housing needs for low-income renters. For the purposes of this project we focus on assistance paid by grantees to address rent (forward and in arrears), utility costs (forward and in arrears), and ‘other housing-related expenses’ as defined by Treasury (such as relocation expenses). Assistance could be paid either to tenants, landlords, utility companies, or providers of housing-related expenses. Further details on eligibility requirements and programmatic guidance for ERA can be found on <a href="https://home.treasury.gov/policy-issues/coronavirus/assistance-for-state-local-and-Tribal-governments/emergency-rental-assistance-program">Treasury’s web site</a> for ERA.</p>
+<p>This dataset details aggregate ERA spending at the county-month level and the county-total level. We attempted to establish broad coverage across the nation, aiming to share these data publicly with researchers interested in applying ERA payments data to their own research.</p>
+<p>This project was completed by a team comprising of the <a href="https://www.housinginitiative.org/">Housing Initiative at Penn</a>, the <a href="https://evictionlab.org/">Eviction Lab</a> (Princeton University), and <a href="https://www.urbandisplacement.org/">Urban Deplacement Project</a>(University of California Berkeley), partially in fulfillment of a small award from the U.S. Department of Housing and Urban Development. The project was also supported by grants awarded to <a href="https://profiles.ucla.edu/kathryn.leifheit">Prof.&nbsp;Kathryn Leifheit, UCLA</a> and <a href="https://publichealth.jhu.edu/faculty/2457/craig-evan-pollack">Prof.&nbsp;Craig Pollack, Johns Hopkins University</a>. Hepburn’s involvement is supported by R01NR020748.</p>
+<p>The project team is solely responsible for the analytical decisions made in this project and the accuracy of aggregated files produced by this project. This work does not reflect the views of the U.S. Government or any other funding sources.</p>
+</section>
+<section id="data-sources" class="level2">
+<h2 class="anchored" data-anchor-id="data-sources">Data sources</h2>
+<section id="phpdfs" class="level3">
+<h3 class="anchored" data-anchor-id="phpdfs">PHPDFs</h3>
+<p>The main source of data for this project were confidential ERA payment data reported to the U.S. Department of the Treasury by ERA grantees. All ERA1 and ERA2 grantees——with the exception of Tribal grantees (n = 301, with total allocation $841,390,378)——were required to submit periodic, detailed reports on the payments they had made for assistance to households. These reports were intended to offer payment-by-payment details on how ERA funds were distributed: amounts and dates of payments, addresses of the assisted property, justification for payment (e.g., rent arrearage), etc. These reports were compiled by Treasury into large files called Participant Household Payment Data Files (PHPDFs). This was done separately for ERA1 and ERA2. The project team received these data between August 2023 and May 2024.</p>
+<p>For ERA1, Treasury compiled a closeout PHPDF based on the payments reported by grantees for the entirety of the ERA1 period of performance ending on December 29, 2022. This forms the basis of the ERA1 payments data used in this analysis.</p>
+<p>For ERA2, the program was still within its period of performance through 2023. Grantees were required to submit data on a quarterly basis, reporting cumulative payments made from the beginning of ERA2 up to the end of the reporting period. We generally use the PHPDF for the 2023 Q4 reporting period, but supplement with data reported in earlier quarters in 2023 for grantees with good data quality in those files but with bad-quality or missing data in the Q4 file.</p>
+<p>Whether the ultimate source of the assistance was ERA1 or ERA2 was largely irrelevant for tenants and landlords, so our final aggregation does not distinguish between them. However, the two programs had slightly different administrative and reporting requirements, so for the purposes of our data processing pipeline, ERA1 and ERA2 are treated separately until just before the final aggregation.</p>
+<p>Addresses in PHPDFs were primarily geocoded by HUD, except for a small percentage of records which failed HUD’s geocoding and we geocoded by the team using the Census geocoder.</p>
+</section>
+<section id="other-data" class="level3">
+<h3 class="anchored" data-anchor-id="other-data">Other data</h3>
+<p>We also made use of ancillary files, including:</p>
+<ul>
+<li>A crosswalk of grantees for ERA1 and ERA2 compiled by the National Low Income Housing Coalition</li>
+<li>Treasury’s publicly released aggregate summary expenditure files</li>
+<li>Treasury’s updated list of allocation amounts (including any reallocations made through June 2024)</li>
+<li>HUD’s <a href="https://www.huduser.gov/portal/datasets/usps_crosswalk.html">ZIP code/county crosswalk</a></li>
+<li>A county/city population crosswalk generated from the <a href="https://mcdc.missouri.edu/applications/geocorr.html">Geocorr engine</a></li>
+</ul>
+</section>
+</section>
+<section id="outputs" class="level2">
+<h2 class="anchored" data-anchor-id="outputs">Outputs</h2>
+<p>The county-month output represents the aggregated summary of spending (for both ERA1 and ERA2 together) at the geographic level of the county (or county-equivalent unit), for each month from January 2021 through March 2023.</p>
+<p>The county-total output represents the summary of spending in geographic county-equivalents, without regard to the date of payment (but excluding any payments known to be made after March 31, 2023, in order to keep coverage consistent across the vintage of the input data sources). The county-total sums may not be equal to the the county-month sums because grantees with poor-quality payment date data could be used for the former aggregation but not the latter. Additionally, the ERA2 data source used for some grantees differs between aggregations, again due to data quality for the payment date field.</p>
+<p>Two quantities are calculated for each aggregation cell:</p>
+<ol type="1">
+<li>The sum of the dollar amount paid for assistance, and</li>
+<li>The number of unique addresses assisted.</li>
+</ol>
+<p>Both these quantities are aggregated without regard to assistance type or payee type (e.g., landlord, tenant). Small values (fewer than 11 unique addresses per cell and the corresponding dollar amount for that cell) are suppressed.</p>
+</section>
+<section id="user-notes-and-data-limitations" class="level2">
+<h2 class="anchored" data-anchor-id="user-notes-and-data-limitations">User notes and data limitations</h2>
+<p>The PHPDF data were compiled by Treasury from hundreds of independent submissions made by ERA grantees to Treasury. In total, 400 state and local ERA1 grantees and 373 state and local ERA2 grantees accepted allocations for ERA. Compliance with Treasury’s <a href="https://home.treasury.gov/policy-issues/coronavirus/assistance-for-state-local-and-tribal-governments/emergency-rental-assistance-program/reporting">reporting requirements</a> was not universal; some grantees failed to report data altogether, while some records which were submitted to Treasury were nonconformant with Treasury’s published data standards. Therefore, the user should be aware that this dataset does not represent complete coverage of ERA spending across the nation.</p>
+<p>We highlight the following data limitations:</p>
+<ul>
+<li>Many grantees who participated in ERA are not represented in the data due to data missingness or quality issues. The county-month dataset reflects reports from 183 grantees (45% of grantees). The county-total dataset reflects reports from 192 grantees (47% of grantees).</li>
+<li>Missing grantees may also affect entire geographies even if other grantees serving that geography have good data quality; for example, if a state grantee is missing, every county in that state will be missing. The county-month dataset provides coverage across 2,227 counties (or county-equivalents), while the county-total offers coverage in 2,283.</li>
+<li>Not every payment made by a grantee may have been reported by the grantee. Particularly for ERA2, grantees were required to submit cumulative data up to the reporting period, but not all may have done so. We threshold the data to drop grantees unlikely to be reporting full data, but this may not have screened out every such grantee.</li>
+<li>Grantees were required to report addresses for the assisted property, but some may have reported addresses for the payee (landlord or utility); we excluded payments made outside of the geographic jurisdiction of the grantee, since these payments by definition do not record the address of the assisted household, but this may not have filtered out all misreported addresses.</li>
+<li>Even if a grantee passed our data quality thresholds, up to 20% of its records may have been dropped due to data quality issues (for example, missing payment amounts).</li>
+<li>Because Tribal grantees did not submit data for PHPDFs, payments made by these grantees (which could also be made outside of the geographic jurisdictions of these grantees) could not be considered.</li>
+<li>Dollar amounts reported are nominal values and are not adjusted for inflation.</li>
+</ul>
+</section>
+<section id="data-cleaning-and-aggregation" class="level1">
+<h1>Data cleaning and aggregation</h1>
+</section>
+<section id="step-0-grantee-metadata" class="level1">
+<h1>Step 0: Grantee metadata</h1>
+<p>We began by preparing grantee metadata to be used in all subsequent steps. We took as our input a structured list of ERA1 and ERA2 grantees compiled by the National Low Income Housing Coalition (NLIHC).</p>
+<p>We also generated geographic crosswalks between grantees and Census geographies, as well as between city-level grantees and county-level grantees.</p>
+</section>
+<section id="step-1-geocode" class="level1">
+<h1>Step 1: Geocode</h1>
+<p>The ERA1 closeout PHPDHF as well as the ERA2 Q4 and reachback PHPDFs had geocoding outputs in a separate file. In this step, we compared the payment files and their corresponding geocodes, and verified that all rows join.</p>
+<p>The following number of rows were present in the payments file but not in the geocoded file: we geocoded these ourselves, using the Census geocoder.</p>
+<ul>
+<li>ERA1 closeout: 77 rows</li>
+<li>ERA2 Q4: 24,394 rows</li>
+<li>ERA2 reachback: 0 rows</li>
+</ul>
+<p>The other ERA2 PHPDFs already had geocodes appended to the payment data in a single file.</p>
+</section>
+<section id="step-2-initial-validation" class="level1">
+<h1>Step 2: Initial validation</h1>
+<p>In this step, we performed preliminary data-cleaning steps to normalize the formatting of the data. Each PHPDF (one for ERA1 and four for ERA2) was processed independently.</p>
+<ul>
+<li>Standardizing variable names
+<ul>
+<li>Ensuring compatibility between PHPDF files</li>
+</ul></li>
+<li>Standardizing variables types
+<ul>
+<li>Treating GEOIDs as appropriately left-padded strings</li>
+<li>Converting dates to ISO 8601 format</li>
+</ul></li>
+<li>Standardizing NA strings
+<ul>
+<li>Turning variously-encoded missing values into proper NAs</li>
+</ul></li>
+<li>Dealing with garbled character encodings in source data</li>
+<li>Standardizing grantee identification
+<ul>
+<li>Correcting misspellings and errors</li>
+<li>Validating grantee IDs</li>
+</ul></li>
+<li>Removing sentinel values (e.g., totals rows)</li>
+<li>Correcting shifted columns (some grantees submitted data with columns in a different order than required)</li>
+<li>Joining relevant geocode data from geocode file</li>
+</ul>
+</section>
+<section id="step-3-deduplication" class="level1">
+<h1>Step 3: Deduplication</h1>
+<p>In this step, we deduplicated each PHPDF independently.</p>
+<p>In the data, three patterns of duplication were discernible, so we deduplicated in three stages.</p>
+<section id="across-grantee" class="level2">
+<h2 class="anchored" data-anchor-id="across-grantee">Across-grantee</h2>
+<p>Identical payments could be reported by more than one grantee. For the purposes of this stage, ‘identical’ means having the same values across:</p>
+<ul>
+<li>address_line_1</li>
+<li>address_line_2</li>
+<li>address_line_3</li>
+<li>city_name</li>
+<li>state_code</li>
+<li>zip5</li>
+<li>zip4</li>
+<li>payee_type</li>
+<li>type_of_assistance</li>
+<li>amount_of_payment</li>
+<li>date_of_payment</li>
+<li>start_date</li>
+<li>end_date</li>
+<li>program</li>
+</ul>
+<p>How such payments were deduplicated depended on the cause of the duplication.</p>
+<p>If the duplication was due to grantees having overlapping geographies, all records made by the smallest jurisdiction were kept and others dropped (e.g., keep records from the City of Pittsburgh grantee, drop records duplicated in the Allegheny County grantee).</p>
+<p>If the duplication was due to misattribution of records to grantees with similar names, we dropped the records attributed to the wrong grantee, by inspecting the location of the payments (e.g., records attributed to Cleveland County, OK but are actually made by Cleveland, OH).</p>
+</section>
+<section id="across-file" class="level2">
+<h2 class="anchored" data-anchor-id="across-file">Across-file</h2>
+<p>In a given PHPDF, a grantee could submit data data to Treasury in multiple files. In some cases (very commonly in the ERA1 PHPDF), multiple files with near-identical contents were included from the same grantee. If identical records (using the same definition as above) were included in multiple files from the same grantee, we kept all records from the file with the largest number of records, and dropped duplicated records from all other files of the same grantee.</p>
+</section>
+<section id="within-file" class="level2">
+<h2 class="anchored" data-anchor-id="within-file">Within-file</h2>
+<p>Records could also be duplicated within a given file from a given grantee. Here, we define identical records more conservatively, since missing data across the identifying columns mean that multiple distinct payments could look the same if they are all missing critical elements like street address. Therefore, if any of the following variables were NA, we gave each NA value a temporary unique value to avoid using these missing values in identifying duplication.</p>
+<ul>
+<li>address_line_1</li>
+<li>payee_type</li>
+<li>type_of_assistance</li>
+<li>amount_of_payment</li>
+<li>date_of_payment</li>
+<li>start_date</li>
+</ul>
+<p>Within a given file from a given grantee, we keep the duplicate record with the lowest row number and drop all others.</p>
+</section>
+<section id="extent-of-duplication" class="level2">
+<h2 class="anchored" data-anchor-id="extent-of-duplication">Extent of duplication</h2>
+<p>We report the following figures to illustrate the extent of de/duplication in each PHPDF:</p>
+<ul>
+<li>ERA1 closeout: 5,621,334 rows dropped (42%)</li>
+<li>ERA2 Q4: 54,293 rows dropped (0.9%)</li>
+<li>ERA2 Q2: 12,261 rows dropped (0.3%)</li>
+<li>ERA2 Q1: 98,317 rows dropped (2%)</li>
+<li>ERA2 reachback: 74 rows dropped (~0%)</li>
+</ul>
+</section>
+</section>
+<section id="step-4-county-imputation" class="level1">
+<h1>Step 4: County imputation</h1>
+<p>In this step, we imputed counties for payments that were missing a geocoded county. This step was necessary for 54,831 rows of payment data where the county geo-identifier was missing.</p>
+<p>For each program, we used two methods:</p>
+<section id="use-grantee-geography-for-countiessingle-county-cities" class="level2">
+<h2 class="anchored" data-anchor-id="use-grantee-geography-for-countiessingle-county-cities">Use grantee geography for counties/single-county cities</h2>
+<p>For county-level grantees and city-level grantees whose jurisdictions are included in only one geographic county, we imputed as the county of payment the geographic county of the grantee’s jurisdiction.</p>
+</section>
+<section id="use-city-zip-county-crosswalk-for-states" class="level2">
+<h2 class="anchored" data-anchor-id="use-city-zip-county-crosswalk-for-states">Use City + ZIP : county crosswalk for states</h2>
+<p>For state programs, this was a bit more complicated. We utilized a county-zip crosswalk from HUD (<a href="https://www.huduser.gov/portal/datasets/usps_crosswalk.html)" class="uri">https://www.huduser.gov/portal/datasets/usps_crosswalk.html)</a> (<code>ZIP_COUNTY_032023.xlsx</code>).</p>
+<p>First, we determined which zip codes in the crosswalk fell into just one county. Similarly to above, we then joined the single-county zips to the payment files, but this time, by zip code and state. We found that joining by city was too limiting, as the cities were described differently in each file (for example, the same address could be described as being in Las Vegas or North Las Vegas).</p>
+<p>The next, slightly more complicated step, was to join zip codes that fall within multiple counties. To be able to join one-to-one, we filtered the HUD county-zip crosswalk file to include counties where 95% of a zip code is within the county. After that, we could simply join by zip code and state.</p>
+</section>
+<section id="coalesce-county_geoid" class="level2">
+<h2 class="anchored" data-anchor-id="coalesce-county_geoid">Coalesce <code>county_geoid</code></h2>
+<p>We then coalesced from <code>geocode_county_geoid</code> and <code>imputed_county_geoid</code>. If a payment already had a value for <code>geocode_county_geoid</code>, then we kept that value. If not, it took on the value of <code>imputed_county_geoid</code>. At the beginning, 54,831 rows were missing <code>geocode_county_geoid</code>. After imputation, 25,604 rows were missing <code>county_geoid_coalesced</code>. These rows are subsequently dropped (in step 7). Therefore, we imputed values for counties for 29,227 payments. In all subsequent data processing steps, we use this coalesced county assignment.</p>
+</section>
+</section>
+<section id="step-5-variable-checks" class="level1">
+<h1>Step 5: Variable checks</h1>
+<p>In thwas step, we generated data validation metrics for each PHPDF.</p>
+<p>We first generated a series of variable-specific checks, testing each row for:</p>
+<ul>
+<li>Whether the record was within the geographic jurisdiction of the grantee</li>
+<li>Whether the record was locatable to a specific county</li>
+<li>Whether the payment amount was recorded, and if so, whether it was negative, zero, or anomalously large
+<ul>
+<li>We define ‘anomalously large’ as an amount exceeding the 99.9th percentile value of all records in ERA1 closeout and ERA2 Q4 ($73,541).</li>
+</ul></li>
+<li>Whether the date of payment was recorded, and if so, whether it was impossibly early (before January, 1, 2021 for ERA1, or before March 1, 2021 for ERA2) or late (after December 31, 2022 for ERA1, or after the end of the reporting quarter for ERA2)</li>
+<li>Whether the payee type (landlord, utility, tenant) was recorded</li>
+<li>Whether the assistance type (rent, utilities, other) was recorded</li>
+<li>Whether the record includes a valid address</li>
+<li>The geocoding quality of the record, as given by HUD’s geocoding process</li>
+</ul>
+<p>For each aggregation type, we select a subset of these tests to calculate grantee-level variable quality.</p>
+<ul>
+<li>For the county-month dataset, we employed the first 4 tests</li>
+<li>For the county-total dataset we imposed the first 3 tests</li>
+</ul>
+<p>For each grantee, we calculated the percentage of its records that met all applicable tests for the relevant aggregation scenario.</p>
+<p>For each grantee, we also calculated the percentage of its aggregate spending in the PHPDF compared to:</p>
+<ul>
+<li>Its total allocation for the applicable program (ERA1 or 2)</li>
+<li>The amount reported in Treasury’s publicly released aggregate summary reporting, which was itself compiled from aggregate reporting submitted by grantees to Treasury</li>
+<li>The amounts in the above bullet, but calculated at the state level (i.e., PHPDF spending added together for all grantees in a state, divided by aggregate reporting together for all grantees in a state)</li>
+</ul>
+</section>
+<section id="step-6-thresholding" class="level1">
+<h1>Step 6: Thresholding</h1>
+<p>In this step, we specified acceptable data quality thresholds for all grantees.</p>
+<p>First, for each PHPDF, we calculated whether each grantee meets the following thresholds:</p>
+<ul>
+<li>Variable quality: At least 79% of records have acceptable data across all variables needed for the applicable aggregation type (see section 5 above for details on the tests)</li>
+<li>Spending completeness: The aggregate sum of the grantee’s payments (excluding negative payments) are:
+<ul>
+<li>Between 80% and 110% of its allocation (ERA1) or 50% and 110% of its allocation (ERA2); or</li>
+<li>If between 50% and 80% of its allocation (ERA1) or 25% and 50% of its allocation (ERA2), the reported spending is within 20% of the aggregate spending as reported to Treasury, either individually or for all grantees in the state together<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></li>
+</ul></li>
+</ul>
+<p>Second, we picked an ERA2 PHPDF source for each grantee, taking the most recent PHPDF for which a grantee passes (if any quarters pass) or the most recent PHPDF we had data for the grantee (if all quarters fail).</p>
+<p>Third, for any grantees which participated in either program (n = 405), we joined the diagnostic data for ERA1 and ERA2 to derive overall threshold checks. A grantee passed if it:</p>
+<ul>
+<li>Submitted data for all programs it participated in</li>
+<li>Passed the variable quality threshold for all programs it participated in</li>
+<li>Passed the spending completeness threshold for all programs it participated in</li>
+</ul>
+<p>Fourth, we applied a geographic threshold: if a passing grantee significantly overlaps in the area of its jurisdiction with a failing grantee, then it fails this threshold. This is done because, in geographic areas served by multiple grantees, if data from one grantee is missing then a significant percentage of ERA activity in that geographic area may also be missing.</p>
+<p>‘Significantly overlaps’ means that more than 20% of the population of the geographic area served by the passing grantee is located in the overlap(s) with the geographic area(s) served by non-passing grantee(s). This is always taken to be the case for county and city grantees vis-à-vis their state grantees.</p>
+<p>Flowcharts illustrating these thresholding steps and the number of grantees dropped at each juncture are available below.</p>
+</section>
+<section id="step-7-pre-aggregation" class="level1">
+<h1>Step 7: Pre-aggregation</h1>
+<p>In this step, we prepared the final data to be aggregated.</p>
+<p>First, we bind the ERA1 data together with the ERA2 data. We select the vintage of the ERA2 data by each grantee, as specified in Step 6.</p>
+<p>Second, we identified geographic counties with coverage issues due to incomplete grantee coverage. For example, if the Cook County, IL, grantee failed, any payments that the State of Illinois grantee made in Cook County should also drop. Note that this screening of counties at the <em>geographic</em> level is in addition to the screening of counties/cities at the <em>grantee</em> level in Step 6.</p>
+<p>Third, we filtered the joined data to only include records to be included in the final aggregation. Namely, we only kept records where:</p>
+<ul>
+<li>The grantee passed all Step 6 thresholds</li>
+<li>The record was assigned to a county</li>
+<li>The county did not fall out due to the geographic screening described above</li>
+<li>The record passed all variable-level checks necessary for the applicable aggregation type</li>
+</ul>
+<p>Fourth, we constructed unique address IDs. To do this, we extracted first unit number information from the following fields, in order of availability:</p>
+<ul>
+<li>Geocoded address unit number</li>
+<li>Address line 2/3</li>
+<li>Address line 1</li>
+</ul>
+<p>We then assigned a unique ID to each unique concatenated value of:</p>
+<ul>
+<li>geocoded address (or if missing, the row number)</li>
+<li>unit number</li>
+<li>geocoded ZIP code</li>
+<li>geocoded state</li>
+</ul>
+<p>Data quality note: Because we are presuming that missing addresses are unique with respect to other missing addresses, the number of unique assisted households in counties with large address missingness rates may be inflated.</p>
+</section>
+<section id="step-8-aggregation" class="level1">
+<h1>Step 8: Aggregation</h1>
+<p>In this step, we performed the final aggregation.</p>
+<p>Taking the data output from the previous step, we grouped the data by variables identifying each cell in the final output (e.g., county GEOID and payment month for the county + month aggregation), then calculated two quantities for each cell:</p>
+<ul>
+<li>The sum of payment amounts</li>
+<li>The number of unique assisted addresses</li>
+</ul>
+<p>We then suppressed cell values where the number of unique assisted addresses is less than 11, and the corresponding payment amount sum. The suppressed values are encoded with the value <code>-99999</code>.</p>
+</section>
+<section id="aggregation-outputs-data-dictionary" class="level1">
+<h1>Aggregation outputs data dictionary</h1>
+<p>The columns for the aggregation outputs are described below.</p>
+<p>For more information on which grantees and records are included in the aggregation, see the documentation on the data processing pipeline, especially Step 6 (“Thresholding”) and Step 7 (“Pre-aggregation”).</p>
+<ul>
+<li><code>county_geoid_coalesced</code>: The Census GEOID (i.e., FIPS code) for the geographic county or county-equivalent. Note: the county geographies are vintage 2000; in Connecticut, these refer to the pre-2022 county-equivalents.</li>
+<li><code>month_of_payment</code>: <em>For county + month aggregation only</em>. The calendar month of the payment, as recorded by grantees. Format is YYYY-MM-DD (DD being <code>01</code> in all cases).</li>
+<li><code>sum_assistance_amount</code>: The sum of non-negative payments in the cell, for any type of assistance to households. Values are nominal US dollars. Suppressed with value <code>-99999</code> if value of <code>unique_assisted_addresses</code> was less than 11.</li>
+<li><code>unique_assisted_addresses</code>: The count of unique addresses (taking into account unit numbers) assisted in the cell. Suppressed with value <code>-99999</code> if value was less than 11.</li>
+</ul>
+</section>
+<section id="data-citation" class="level1">
+<h1>Data Citation</h1>
+<p>Kim, Chi-Hyun, Grace Hartley, Jacob Haas, Tim Thomas, Rebecca Yae, and Peter Hepburn. County Emergency Rental Assistance Spending. 2025. Accessed via TKTK.</p>
+</section>
+<section id="aggregation-descriptives---county-month-dataset" class="level1">
+<h1>Aggregation Descriptives - County-Month Dataset</h1>
+<section id="grantee-level---county-month-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="grantee-level---county-month-dataset">Grantee Level - County-Month Dataset</h2>
+<section id="number-of-grantees-by-type---county-month-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="number-of-grantees-by-type---county-month-dataset">Number of Grantees by Type - County-Month Dataset</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-410e674d0644221d59e1" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-410e674d0644221d59e1">{"x":{"filter":"none","vertical":false,"data":[["1","2","3"],["City","County","State"],[44,112,43]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>grantee_geographic_level<\/th>\n      <th>number_of_grantees<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"grantee_geographic_level","targets":1},{"name":"number_of_grantees","targets":2}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="number-of-grantees-by-state-and-type---county-month-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="number-of-grantees-by-state-and-type---county-month-dataset">Number of Grantees by State and Type - County-Month Dataset</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-5632a5a21241e5baa98f" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-5632a5a21241e5baa98f">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72"],["Alabama","Alabama","Alaska","Alaska","Arkansas","Arkansas","California","California","California","Connecticut","District of Columbia","Florida","Florida","Florida","Georgia","Georgia","Georgia","Hawaii","Hawaii","Idaho","Illinois","Illinois","Kansas","Kentucky","Kentucky","Louisiana","Louisiana","Maine","Massachusetts","Michigan","Michigan","Mississippi","Mississippi","Missouri","Missouri","Nevada","New Hampshire","New Hampshire","New Mexico","New Mexico","New Mexico","New York","New York","New York","North Carolina","North Carolina","North Carolina","Oklahoma","Oklahoma","Oklahoma","Rhode Island","South Carolina","South Carolina","South Dakota","Tennessee","Tennessee","Texas","Texas","Texas","Utah","Utah","Utah","Vermont","Virginia","Virginia","Washington","Washington","Washington","West Virginia","Wisconsin","Wisconsin","Wisconsin"],["County","State","County","State","County","State","City","County","State","State","State","City","County","State","City","County","State","County","State","State","County","State","State","County","State","County","State","State","State","County","State","County","State","County","State","State","County","State","City","County","State","City","County","State","City","County","State","City","County","State","State","County","State","State","County","State","City","County","State","City","County","State","State","County","State","City","County","State","State","City","County","State"],[2,1,1,2,1,1,14,13,1,2,1,5,19,1,1,7,1,1,1,1,4,2,2,2,1,3,1,1,1,3,1,1,1,5,1,1,1,1,1,2,1,6,2,1,2,6,2,2,3,1,1,2,2,1,4,1,10,15,1,1,3,2,1,1,1,1,9,1,1,1,2,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>grantee_state<\/th>\n      <th>grantee_geographic_level<\/th>\n      <th>number_of_grantees<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":3},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"grantee_state","targets":1},{"name":"grantee_geographic_level","targets":2},{"name":"number_of_grantees","targets":3}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="spending-percentage-by-grantee---county-month-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="spending-percentage-by-grantee---county-month-dataset">Spending Percentage by Grantee - County-Month Dataset</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-0b1e668aa0a34c125230" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-0b1e668aa0a34c125230">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110","111","112","113","114","115","116","117","118","119","120","121","122","123","124","125","126","127","128","129","130","131","132","133","134","135","136","137","138","139","140","141","142","143","144","145","146","147","148","149","150","151","152","153","154","155","156","157","158","159","160","161","162","163","164","165","166","167","168","169","170","171","172","173","174","175","176","177","178","179","180","181","182","183","184","185","186","187","188","189","190","191","192","193","194","195","196","197","198","199"],["ALACHUA COUNTY, FLORIDA","ALAMEDA COUNTY, CALIFORNIA","ALASKA HOUSING FINANCE CORPORATION","ARLINGTON CITY, TEXAS","BENTON COUNTY HUMAN SERVICES","BERKELEY COUNTY","BERNALILLO COUNTY NEW MEXICO","BEXAR COUNTY","BRAZORIA COUNTY","BRAZOS COUNTY, TEXAS","BROWARD COUNTY, FLORIDA","BROWN COUNTY, WISCONSIN","BUNCOMBE COUNTY","CA DEPARTMENT OF HOUSING AND COMMUNITY DEVELOPMENT","CABARRUS COUNTY GOVERNMENT","CAMERON COUNTY, TEXAS","CHARLESTON COUNTY, SOUTH CAROLINA","CHATHAM COUNTY, GA","CHEROKEE COUNTY, GEORGIA","CHESTERFIELD COUNTY, VIRGINIA","CITY AND COUNTY OF HONOLULU","CITY AND COUNTY OF SAN FRANCISCO","CITY OF ALBUQUERQUE","CITY OF ATLANTA, GEORGIA","CITY OF AUSTIN","CITY OF BAKERSFIELD","CITY OF CHULA VISTA","CITY OF DALLAS","CITY OF FREMONT, CALIFORNIA","CITY OF FRESNO","CITY OF GARLAND, TEXAS","CITY OF HOUSTON","CITY OF JACKSONVILLE DUVAL COUNTY PORTION","CITY OF LONG BEACH","CITY OF LOS ANGELES","CITY OF MADISON, WISCONSIN","CITY OF MIAMI","CITY OF OKLAHOMA CITY","CITY OF PORT ST. LUCIE, FLORIDA","CITY OF SAN ANTONIO","CITY OF SAN DIEGO","CITY OF SAN JOSE","CITY OF ST LOUIS","CITY OF ST. LOUIS MISSOURI","CITY OF STOCKTON","CITY OF TAMPA","CITY OF TULSA","CLARK COUNTY, WASHINGTON","CLEVELAND COUNTY","COBB COUNTY GOVERNMENT","COMMONWEALTH OF KENTUCKY","COMMONWEALTH OF MASSACHUSETTS","CONNECTICUT DEPARTMENT OF HOUSING","CONNECTICUT OFFICE OF POLICY AND MANAGEMENT","COUNTY OF DANE","COUNTY OF GREENE","COUNTY OF JOHNSTON, NC","COUNTY OF MACOMB, MICHIGAN","COUNTY OF MARIN","COUNTY OF MERCED","COUNTY OF MONROE","COUNTY OF SAN BERNARDINO","COUNTY OF SAN DIEGO, CALIFORNIA","COUNTY OF SANTA CLARA","COUNTY OF SOLANO","COUNTY OF STANISLAUS","COUNTY OF TULSA","COUNTY OF WASHINGTON, AR","DALLAS COUNTY","DAVIS COUNTY, UTAH","DENTON COUNTY","DISTRICT OF COLUMBIA","DOÑA ANA COUNTY","ESCAMBIA COUNTY, FL","ETROPOLITAN GOVERNMENT OF NASHVILLE AND DAVIDSON COUNTY","FORSYTH COUNTY, NORTH CAROLINA","FORT BEND COUNTY","FRESNO COUNTY, CALIFORNIA","FRISCO CITY, TEXAS","FULTON COUNTY, GEORGIA","GALVESTON COUNTY","GENESEE COUNTY","GENESEE COUNTY, MICHIGAN","GOVERNOR DAVID Y. IGE AND THE STATE OF HAWAII","GREENSBORO CITY, NORTH CAROLINA","GUILFORD COUNTY","GWINNETT COUNTY BOARD OF COMMISSIONERS","HALL COUNTY, GEORGIA","HARRIS COUNTY","HAYS COUNTY, TEXAS","HENRY COUNTY, GEORGIA","HILLSBOROUGH COUNTY, FLORIDA","HINDS COUNTY BOARD OF SUPERVISORS","IL DEPT OF COMMERCE &amp; ECONOMIC OPPORTUNITY","ILLINOIS EMERGENCY MANAGEMENT AGENCY","IRVING CITY, TEXAS","JEFFERSON COUNTY, MISSOURI GOVERNMENT","JEFFERSON COUNTY, TEXAS","JEFFERSON PARISH","JEFFERSON PARISH, LOUISIANA","KERN COUNTY, CALIFORNIA","KITSAP COUNTY","KITSAP COUNTY, WASHINGTON","KNOX COUNTY, TENNESSEE","KS HOUSING RESOURCES CORP FOR THE STATE OF KANSAS","LAKE COUNTY, FLORIDA","LAKE COUNTY, ILLINOIS","LAREDO CITY, TEXAS","LEE COUNTY","LEON COUNTY","LEXINGTON","LONG BEACH CITY, CALIFORNIA","LOUISVILLE","LUBBOCK CITY, TEXAS","LUBBOCK COUNTY","MANATEE COUNTY","MARION COUNTY BCC","MCHENRY COUNTY, ILLINOIS","MCLENNAN COUNTY, TEXAS","METROPOLITAN GOVERNMENT OF NASHVILLE AND DAVIDSON COUNTY","MIAMI","MOBILE COUNTY, ALABAMA","MODESTO, CITY OF","MONTGOMERY COUNTY COMMISSION","MUNICIPALITY OF ANCHORAGE","NEW HANOVER COUNTY","NEW YORK STATE","NORTH CAROLINA","OAKLAND CITY, CALIFORNIA","OF NORTH CAROLINA","OKALOOSA COUNTY BOARD OF COUNTY COMMISSIONERS","OKLAHOMA COUNTY, OKLAHOMA","ONONDAGA COUNTY","OSCEOLA COUNTY","PALM BEACH COUNTY, FLORIDA","PIERCE COUNTY, WASHINGTON","PINELLAS COUNTY, FLORIDA","POLK COUNTY, FLORIDA","ROCKINGHAM COUNTY, NEW HAMPSHIRE","RUTHERFORD, COUNTY OF","SALT LAKE CITY CITY, UTAH","SALT LAKE COUNTY, UTAH","SAN BERNARDINO CITY, CALIFORNIA","SAN JOAQUIN COUNTY, CALIFORNIA","SANTA BARBARA COUNTY","SARASOTA COUNTY BOARD OF COUNTY COMMISSIONERS","SC STATE HOUSING FINANCE &amp; DEVELOPMENT AUTHORITY","SEMINOLE COUNTY, FLORIDA","SNOHOMISH COUNTY, WASHINGTON","SOUTH DAKOTA HOUSING DEVELOPMENT AUTHORITY","ST. LOUIS COUNTY MISSOURI","ST. LUCIE COUNTY, FLORIDA","ST. PETERSBURG CITY, FLORIDA","ST. TAMMANY PARISH, LOUISIANA","STATE OF ALABAMA","STATE OF ALASKA","STATE OF ARKANSAS DEPARTMENT OF HUMAN SERVICES","STATE OF FLORIDA","STATE OF GEORGIA","STATE OF IDAHO","STATE OF KANSAS","STATE OF LOUISIANA","STATE OF MAINE","STATE OF MICHIGAN","STATE OF MISSISSIPPI","STATE OF MISSOURI","STATE OF NEVADA","STATE OF NEW HAMPSHIRE TREASURY","STATE OF NEW MEXICO","STATE OF OKLAHOMA","STATE OF RHODE ISLAND","STATE OF SOUTH CAROLINA","STATE OF TENNESSEE","STATE OF UTAH","STATE OF UTAH, DEPARTMENT OF WORKFORCE SERVICES","STATE OF VERMONT, OFFICE OF THE TREASURER","STATE OF WEST VIRGINIA","STOCKTON CITY, CALIFORNIA","TACOMA CITY, WASHINGTON","TEXAS DEPARTMENT OF HOUSING AND COMMUNITY AFFAIRS","THE COUNTY OF VOLUSIA, FLORIDA","THURSTON COUNTY","THURSTON COUNTY, WASHINGTON","TOWN OF HEMPSTEAD, HEMPSTEAD, NY","TOWN OF HEMPSTEAD, NEW YORK","TOWN OF ISLIP","TOWN OF ISLIP CDA","TOWN OF OYSTER BAY","TRAVIS COUNTY","UTAH COUNTY","VA DEPARTMENT OF HOUSING &amp; COMMUNITY DEVELOPMENT","WASHINGTON STATE GOVERNOR'S OFFICE","WEBB COUNTY","WHATCOM COUNTY, WASHINGTON","WILL COUNTY, ILLINOIS","WINNEBAGO COUNTY, ILLINOIS","WINSTON","WISCONSIN, STATE OF","YONKERS CITY, NEW YORK"],[17035638.18,57916529.98,53699293.49,12264.09,8312427.47,10896091.38,11550644.79,18271690.98,16438310.69,4055717.44,90909777.34,22263921.57,12674574.15,2756039276.94,8977328.460000001,12531217.36,37284180.71,14461931.76,6353398.8,18392111.77,105423682.7,21750869.24,25360035.455,32330765.94,55584372.501,18551643.23,17907221.56,66209412.391,11377766.3,29073834.75,10521627.44,151417034.44,65440298.44,15071922.02,106694050.14,47822137.16,34243632.17,28910542.52,4333393.57,105039134.96,73846855.27,23742433.61,10776209.74,8132396.666,9694312.5,19290605.68,10864183.32,23914799.45,6726348.15,48633595.41,291446539.52,589970825.6900001,103374936.37,224966542,31877827.86,14256280.22,8714778.539999999,49451735.6,12923031.56,2599617.54,36050075.88,36030957.18,114413839.06,16958233.22,7353578.07,2672379.21,8472049.630000001,12577244.36,40038722.18,17256073.63,19120158.86,330059409.01,14353685.59,5964442.63,44501057.05,6336163.73,29240303.22,15740982.34,1534211.08,98262036.02,4218688.29,11254925.05,7989155.13,139830102.94,9835100.119999999,12035220.109,86006475.67,14479683.78,150199900.59,3928115.24,29066970.1,69637823.53,13014078.83,111216730.6600614,68300990.36333333,11773981.81,6894485.33,8525290.390000001,19692643.57,11184243.28,30424400.99,7042985.49,5585749.75,56962387.31,140206591.09,13912185.86,32729370.89,6381610.31,37450460.48,16931060.41,33207353.78,19688842.08,70787861.34999999,14003930.804,1069157.55,16879931.8,15353872,11708880.79,10800263.96,23916930.23,142974077.72,19461658.65,3354544,19334099.87,42950888.55349712,12376502.2,2171111113.17,454392542.559,27888904.81,358171651.45,293144.92,16280182.61,27002012.79,16929433.15,89151263.28,41427423.67,40952685.44,26081444.69,8531726.32,26426217.97,16286900.74,57696768.03,12509266.83,2259445.6,30815510.85,20174524.29,168502712.53,22412353.69,48714495.1,40638547.47,49615795.52,4811871.32,12898848.8,11241846.107,176512220.19,153867413.23,85529938.61,1049007923.65,401073346.23925,70544546.336,99694730.09,144582087.74,282333000.3,533674617.91,253452703.22,392828372.72,4359626.02,292572938.79,194806922.48,299897876.6852849,272338281.9,146798865.17,174722031.6,110339157.78,92919470.56,213787355.3665522,168158143.54,9390353.98,11537182.01,1742815796.33,27224706.89,6536926.95,8314588.77,12487112.59,20474770.5,8485443.27,8799041.619999999,9120492.24,17690082.89,27292302.54,904522572.6039,226156196.14,594369.26,3665119.93,26815953.01,13773389.08,11865773.79,256884031.73,12329268.98],[32910907.25,70673219.25,294713008.34,27471909.01,11215810.8,12346129,17413121.27,22906346.15,18873470.65,4278872.57,113922322.14,32165139.5,14502292.89,4467773025.3,9602115.030000001,21249961.94,42574426.98,20669792.12,9039337.709999999,19717473.76,131663523.97,26209982.7,31372041.2,49839715.95,66440351.2,20458436.6,19716824.47,95601603.63,13211238.36,35618342,11872482.88,178844794.31,74791387.96000001,41130086.45999999,118319705.8,88758164.28,42837837.40000001,38665928.33,9256584.99,121727814.37,119698500.12,30379739.9,21432001.2,21432001.2,21510782.94,21892305.98,21573481.9,26838636.61,8454143.220000001,68990261.30000001,375119771.74,868941362.5899999,471252147.55,471252147.55,61729351.44,15260084.03,9890691.140000001,52083222,17191177.62,3220000.6,46961055.47,40826713.83,129927709.99,26938648.2,13309203.8,3307365.62,13899858.11,15838920,53454990.81,18156456.9,31108206.54,418546507.08,30226980.54,8326800.09,74760598.42,7258478.6,38605804.95,19773804.2,6058027.1,109979013.2,8180061.3,24855273.86,24855273.86,205427062.3,16543565.56,13866099.27,100469405.69,17623094.9,172150342.06,4408031.72,44081171.07,77994124.36,15435821.86,1069254145.11,1069254145.11,13075761.33,8862692.02,11123642.68,64771617.87,64771617.87,35475841.6,14362713.96,14362713.96,62218001.63,331632367.4,15449123.49,37517516.8,8588685.74,41679062.8,22003668.42,51689217.35,41130086.45999999,115093546.95,14609700.67,1129337.8,18941276.66,19773481.6,16053151.33,12498191.89,74760598.42,182569393.57,22169574.9,3727915.46,22789315.3,58320841.66,12667787.6,2890974803.03,1043858808.3,33523098.83,1043858808.3,543663.78,23117689.41,29321169.07,23025547.5,117755986.15,46251778.79,48952639.19,32708069.21,10765099.76,30132282.4,23206602.07,78291433.58,15041061.34,3491549.92,33902708.81,22279722.45,444563974.37,25520182.3,55630406.61,94913972.93000001,59600390.2,6839497.1,20311546.83,20158654.51,293599637.1,294713008.34,141861956.92,1616755922.4,764304267.6700001,129520026.82,331632367.4,256693750.84,352000000,1116456441.17,307009211.6,602859155.1,225575576.62,326499190.44,257928314.05,378469668.06,352000000,444563974.37,492067379.53,221419655.13,221419655.13,320826860.8,260656771.74,21510782.94,12153255.77,2687062463.78,29106452.71,15955461.58,15955461.58,45469859.7,45469859.7,19761613.1,19761613.1,13400321.85,19914007.42,28763387.39,1014049353.24,615697767.37,853279,6911585.2,36676044.4,15074549.09,13395634.5,334197309.2,14559098.5],[51.76289444284463,81.9497549349289,18.22087657157265,0.04464229258889788,74.11347800196486,88.25512336700841,66.33299459011923,79.76693821157505,87.0974448464782,94.78472129400197,79.79979308030633,69.2175501679388,87.39703608344377,61.68709245821498,93.49324010337334,58.97054025500057,87.57412220137412,69.96650801343424,70.28610948976262,93.27823631905265,80.07053094220777,82.98696526800836,80.83642149175807,64.86948274832615,83.66056394506235,90.67967212118251,90.82203671918168,69.2555458036515,86.12187586024298,81.62601939753399,88.62196346245648,84.66393166442508,87.49710391121346,36.64451820362159,90.17437071754451,53.87914176451238,79.93781723911206,74.77007217635837,46.81417147556488,86.29016753782039,61.6940523030507,78.15219514107822,50.28093102197102,37.94511109863134,45.06722292275616,88.1159147767402,50.35897019479272,89.10586553822712,79.56274190017803,70.49342109101417,77.69426233336617,67.89535532426612,21.93622605380953,47.73804070062747,51.64128103789454,93.42202960333242,88.11091577569977,94.94753531185148,75.17246255989762,80.73344893165549,76.7658978683513,88.25338558971647,88.0596133563856,62.95131475825131,55.2518255825341,80.80084021675232,60.9506195167916,79.40720932992905,74.90174738279035,95.04097481706356,61.46339177546169,78.85847890899092,47.48633615919879,71.62946828954074,59.52474697968048,87.293275618392,75.74069044246154,79.60523013573686,25.32525943966147,89.34616992908244,51.57281999830491,45.28183882983778,32.14269605315867,68.0680049524322,59.44970015278859,86.79600423053945,85.60464260669998,82.16311528799632,87.2492606129417,89.11268088606224,65.93965040956431,89.28598673480896,84.3108902657419,10.4013373404898,6.3877227575589,90.04433097892893,77.79222514380005,76.64117443585486,30.40319852674385,17.26719765198294,85.7608998626265,49.03659231545401,38.89062864829204,91.55290401119881,42.2777161919449,90.05161923267143,87.23757242376981,74.30252431147865,89.85437282913185,76.94653494510348,64.24425727931823,47.86968317984908,61.50463099443125,95.85364628829181,94.67119138312735,89.11718097464293,77.64880414382867,72.93820726724564,86.41461144984869,31.99135739341772,78.3121830687253,87.78543899820109,89.98444401418911,84.83844124092663,73.64586540758974,97.70058190745162,75.0996207540267,43.53007695542765,83.19309903725866,34.31226987807945,53.92025931909608,70.42305275957939,92.0905054144896,73.52456287955802,75.70847665140121,89.56936306838202,83.65776823809283,79.74009264364034,79.25357414430501,87.70068466502889,70.18218647810855,73.69486723096482,83.16744774341835,64.71182288008073,90.89394898413133,90.55105751553022,37.90291662044554,87.82207519732333,87.56810900469527,42.8161905096643,83.24743404112814,70.3541685835352,63.50500485245417,55.76684744224033,60.12004031526781,52.20923708005741,60.2909620499827,64.88350585985768,52.47561255439954,54.46613011749838,30.06182142943626,56.32473999342492,80.2082387215909,47.80075587639865,82.5554066925593,65.16088698277115,1.932667572138865,89.60908552199473,75.52754461933024,79.2396067622891,77.36883008522727,33.02086395507675,35.50774525368586,49.83259400129479,41.9653216899128,66.63636418517493,64.51324568223166,43.65417105547717,94.93079244229548,64.85951926395897,93.53495309528566,40.96983918155002,52.11123932899721,27.4623952490445,45.02932411731193,42.9390213595468,44.52592799724431,68.06174017380037,88.83236064396324,94.88556465880147,89.19906804475049,36.73169014499491,69.65708285332231,53.0286442826459,73.11571748997011,91.36849797475435,88.579408388606,76.86597846790802,84.68428852239718]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>grantee_name<\/th>\n      <th>sum_grantee_payments<\/th>\n      <th>total_allocation<\/th>\n      <th>pct_reported_spending<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"grantee_name","targets":1},{"name":"sum_grantee_payments","targets":2},{"name":"total_allocation","targets":3},{"name":"pct_reported_spending","targets":4}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="grantees-passing-with-low-goodness-percentages---county-month-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="grantees-passing-with-low-goodness-percentages---county-month-dataset">Grantees Passing with Low Goodness Percentages - County-Month Dataset</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-d97fef22cd513b8e5a85" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-d97fef22cd513b8e5a85">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5"],["Florida","Louisiana","Massachusetts","New York","New York"],["VOLUSIA COUNTY","JEFFERSON PARISH","STATE OF MASSACHUSETTS","STATE OF NEW YORK","MONROE COUNTY"],[0.9837910850968032,0.9604200323101776,0.9782541649307152,0.866829759950031,0.9998357154591752],[0.8944912973263951,0.8609826589595375,0.8994848103563761,0.7974051828628309,0.8394993045897079],["Passes","Passes","Passes","Passes","Passes"],["Local Government","Local Government","State/DC","State/DC","Local Government"],["County","County","State","State","County"],["ERA-2101112110","ERA-2101080811","ERA-2101080866","ERA-2101081032","ERA-2101070549"],["SLT-0162","SLT-0369","SLT-0337","SLT-0395","SLT-0195"],["ERA-2101112110_SLT-0162","ERA-2101080811_SLT-0369","ERA-2101080866_SLT-0337","ERA-2101081032_SLT-0395","ERA-2101070549_SLT-0195"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>grantee_state<\/th>\n      <th>grantee_name<\/th>\n      <th>ok_percent_era1<\/th>\n      <th>ok_percent_era2<\/th>\n      <th>threshold_passing_with_complete_geography_label<\/th>\n      <th>grantee_type<\/th>\n      <th>geographic_level<\/th>\n      <th>grantee_id_era1<\/th>\n      <th>grantee_id_era2<\/th>\n      <th>grantee_id_combined<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[3,4]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"grantee_state","targets":1},{"name":"grantee_name","targets":2},{"name":"ok_percent_era1","targets":3},{"name":"ok_percent_era2","targets":4},{"name":"threshold_passing_with_complete_geography_label","targets":5},{"name":"grantee_type","targets":6},{"name":"geographic_level","targets":7},{"name":"grantee_id_era1","targets":8},{"name":"grantee_id_era2","targets":9},{"name":"grantee_id_combined","targets":10}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="grantees-with-low-allocation-spending---county-month-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="grantees-with-low-allocation-spending---county-month-dataset">Grantees with Low Allocation Spending - County-Month Dataset</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-fb080a0e355d8dfb35ef" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-fb080a0e355d8dfb35ef">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40"],["Tennessee","Washington","Florida","California","Louisiana","Louisiana","Florida","Florida","Florida","Georgia","California","California","Texas","California","Georgia","Georgia","Idaho","Arkansas","South Carolina","North Carolina","Hawaii","Utah","South Dakota","New Hampshire","Washington","Alabama","Georgia","California","Missouri","Florida","Georgia","New York","California","Oklahoma","Wisconsin","Texas","Florida","Texas","Alaska","Kentucky"],["STATE OF TENNESSEE","WHATCOM COUNTY","OKALOOSA COUNTY","SOLANO COUNTY","STATE OF LOUISIANA","JEFFERSON PARISH","CITY OF PORT ST LUCIE","ESCAMBIA COUNTY","ST LUCIE COUNTY","CITY OF ATLANTA","SAN JOAQUIN COUNTY","SANTA CLARA COUNTY","DENTON COUNTY","STATE OF CALIFORNIA","COBB COUNTY","CHATHAM COUNTY","STATE OF IDAHO","STATE OF ARKANSAS","STATE OF SOUTH CAROLINA","CITY OF GREENSBORO","STATE OF HAWAII","SALT LAKE CITY","STATE OF SOUTH DAKOTA","ROCKINGHAM COUNTY","STATE OF WASHINGTON","STATE OF ALABAMA","STATE OF GEORGIA","CITY OF SAN JOSE","JEFFERSON COUNTY","ALACHUA COUNTY","CHEROKEE COUNTY","TOWN OF OYSTER BAY","CITY OF SAN DIEGO","CITY OF TULSA","CITY OF MADISON","WEBB COUNTY","CITY OF ST PETERSBURG","CAMERON COUNTY","MUNICIPALITY OF ANCHORAGE","LOUISVILLE/JEFFERSON COUNTY"],[0.5067660469740295,0.530286442826459,0.5392025931909608,0.552518255825341,0.5534601106187782,0.5668588304051974,0.5833949429806545,0.5993098159987124,0.6192113957012367,0.6412371246369926,0.6471182288008073,0.6491217603116403,0.6592231310416778,0.6744212484566378,0.6833701555708166,0.6845840586686122,0.6948010046612836,0.7058865548885029,0.740827610324241,0.7499862695888719,0.7530423932505612,0.7545742957370714,0.7550978819625115,0.7608212933773921,0.7666651273664947,0.777218266994306,0.7804996353223622,0.7822658682472788,0.7823001088190069,0.786305343591653,0.7866467534103212,0.7999389198446453,0.8517984085263344,0.8598923428811979,0.8893584338035514,0.8928012623796333,0.9028082014154986,0.9241773013641178,0.963718835914827,0.9747103436413694],[0.454507832291441,null,null,null,0.7128167651470314,0.6366924410327589,0.2610029902873423,0.8241627748841499,0.8302146694142523,0.7519921224841347,null,null,0.7954327365663207,0.6967456798185601,0.7666833885914841,0.8360384362854484,0.9228428261589712,null,0.7021565306103789,0.4113881906490882,0.6634737823790998,0.6206287354121115,0.5177779647215748,0.8832992663309086,0.8430116411331163,0.7860379658913528,0.718241129574287,null,0.7690064671695328,0.5208411937757328,0.8237999180568293,0.780535788866905,0.3512486986481903,0.3498922011036372,0.3681435651028664,0.4991864146837939,0.4606143602192232,0.3846937414939227,0.4229920257623205,0.4829786313093071],["Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes"],["State/DC","Local Government","Local Government","Local Government","State/DC","Local Government","Local Government","Local Government","Local Government","Local Government","Local Government","Local Government","Local Government","State/DC","Local Government","Local Government","State/DC","State/DC","State/DC","Local Government","State/DC","Local Government","State/DC","Local Government","State/DC","State/DC","State/DC","Local Government","Local Government","Local Government","Local Government","Local Government","Local Government","Local Government","Local Government","Local Government","Local Government","Local Government","Local Government","Local Government"],["State","County","County","County","State","County","City","County","County","City","County","County","County","State","County","County","State","State","State","City","State","City","State","County","State","State","State","City","County","County","County","City","City","City","City","County","City","County","County","County"],["ERA-2101112138","ERA-2101080820","ERA-2101060060","ERA-2101112215","ERA-2101112003","ERA-2101080811","ERA-2101070630","ERA-2101070446","ERA-2101123106","ERA-2101070562","ERA-2101111988","ERA-2101091167","ERA-2101091133","ERA-2101091157","ERA-2101123162","ERA-2101070333","ERA-2101060177","ERA-2101208170","ERA-2101112289","ERA-2101060119","ERA-2101112170","ERA-2101112470","ERA-2101112350","ERA-2101123939","ERA-2101112480","ERA-2101070427","ERA-2101112336","ERA-2101060091","ERA-2101123645","ERA-2101070387","ERA-2101111936","ERA-2101080836","ERA-2101112156","ERA-2101070472","ERA-2101111887","ERA-2101134122","ERA-2101070425","ERA-2101111971","ERA-2101060120","ERA-2101081038"],["SLT-8226",null,null,null,"SLT-0108","SLT-0369","SLT-7624","SLT-0466","SLT-3817","SLT-0322",null,null,"SLT-0452","SLT-0172","SLT-0550","SLT-0128","SLT-0065",null,"SLT-0424","SLT-0350","SLT-0106","SLT-0421","SLT-0095","SLT-1181","SLT-0295","SLT-0329","SLT-0116",null,"SLT-0333","SLT-0274","SLT-0121","SLT-0500","SLT-0340","SLT-0265","SLT-0405","SLT-0462","SLT-0188","SLT-0706","SLT-0469","SLT-0200"],["ERA-2101112138_SLT-8226","ERA-2101080820","ERA-2101060060","ERA-2101112215","ERA-2101112003_SLT-0108","ERA-2101080811_SLT-0369","ERA-2101070630_SLT-7624","ERA-2101070446_SLT-0466","ERA-2101123106_SLT-3817","ERA-2101070562_SLT-0322","ERA-2101111988","ERA-2101091167","ERA-2101091133_SLT-0452","ERA-2101091157_SLT-0172","ERA-2101123162_SLT-0550","ERA-2101070333_SLT-0128","ERA-2101060177_SLT-0065","ERA-2101208170","ERA-2101112289_SLT-0424","ERA-2101060119_SLT-0350","ERA-2101112170_SLT-0106","ERA-2101112470_SLT-0421","ERA-2101112350_SLT-0095","ERA-2101123939_SLT-1181","ERA-2101112480_SLT-0295","ERA-2101070427_SLT-0329","ERA-2101112336_SLT-0116","ERA-2101060091","ERA-2101123645_SLT-0333","ERA-2101070387_SLT-0274","ERA-2101111936_SLT-0121","ERA-2101080836_SLT-0500","ERA-2101112156_SLT-0340","ERA-2101070472_SLT-0265","ERA-2101111887_SLT-0405","ERA-2101134122_SLT-0462","ERA-2101070425_SLT-0188","ERA-2101111971_SLT-0706","ERA-2101060120_SLT-0469","ERA-2101081038_SLT-0200"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>grantee_state<\/th>\n      <th>grantee_name<\/th>\n      <th>percent_of_allocation_spent_era1<\/th>\n      <th>percent_of_allocation_spent_era2<\/th>\n      <th>threshold_passing_with_complete_geography_label<\/th>\n      <th>grantee_type<\/th>\n      <th>geographic_level<\/th>\n      <th>grantee_id_era1<\/th>\n      <th>grantee_id_era2<\/th>\n      <th>grantee_id_combined<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[3,4]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"grantee_state","targets":1},{"name":"grantee_name","targets":2},{"name":"percent_of_allocation_spent_era1","targets":3},{"name":"percent_of_allocation_spent_era2","targets":4},{"name":"threshold_passing_with_complete_geography_label","targets":5},{"name":"grantee_type","targets":6},{"name":"geographic_level","targets":7},{"name":"grantee_id_era1","targets":8},{"name":"grantee_id_era2","targets":9},{"name":"grantee_id_combined","targets":10}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+</section>
+<section id="geographic-county-level---county-month-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="geographic-county-level---county-month-dataset">Geographic County Level - County-Month Dataset</h2>
+<section id="map-of-included-counties---county-month-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="map-of-included-counties---county-month-dataset">Map of Included Counties - County-Month Dataset</h3>
+<section id="number-and-of-counties-included-in-the-final-output-by-state---county-month-dataset" class="level4">
+<h4 class="anchored" data-anchor-id="number-and-of-counties-included-in-the-final-output-by-state---county-month-dataset">Number and % of counties included in the final output, by state - County-Month Dataset</h4>
+<div class="cell">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-76568c938a38d4286ce1" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-76568c938a38d4286ce1">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36"],["Alabama","Alaska","Arkansas","California","Connecticut","District of Columbia","Florida","Georgia","Hawaii","Idaho","Illinois","Kansas","Kentucky","Louisiana","Maine","Massachusetts","Michigan","Mississippi","Missouri","Nevada","New Hampshire","New Mexico","New York","North Carolina","Oklahoma","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin"],[63,30,73,52,8,1,61,155,3,42,95,102,120,59,16,13,82,81,112,13,10,33,62,94,77,5,41,62,94,233,29,14,132,26,55,70],[94.02985074626866,100,97.33333333333334,32.5,100,100,91.04477611940298,96.875,60,95.45454545454545,93.13725490196079,97.14285714285714,100,92.1875,100,86.66666666666667,98.79518072289156,98.78048780487805,97.39130434782609,76.47058823529412,100,100,100,94,100,100,89.13043478260869,93.93939393939394,98.94736842105263,91.73228346456693,100,100,99.24812030075188,66.66666666666666,100,97.22222222222221]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>grantee_state<\/th>\n      <th>n<\/th>\n      <th>pct_total_counties_covered<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"grantee_state","targets":1},{"name":"n","targets":2},{"name":"pct_total_counties_covered","targets":3}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="thresholding-flowchart" class="level4">
+<h4 class="anchored" data-anchor-id="thresholding-flowchart">Thresholding flowchart</h4>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="outputs/aggregation_descriptives/grantee_thresholding_flowcharts/era_grantees_county_month_thresholding_flowchart_2025-03-14.png" class="img-fluid figure-img" width="270"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+</section>
+<section id="aggregation-descriptives---county-total-dataset" class="level1">
+<h1>Aggregation Descriptives - County-Total Dataset</h1>
+<section id="grantee-level---county-total-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="grantee-level---county-total-dataset">Grantee Level - County-Total Dataset</h2>
+<section id="number-of-grantees-by-type---county-total-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="number-of-grantees-by-type---county-total-dataset">Number of Grantees by Type - County-Total Dataset</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-b7ceb9e360831333161f" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-b7ceb9e360831333161f">{"x":{"filter":"none","vertical":false,"data":[["1","2","3"],["City","County","State"],[47,118,44]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>grantee_geographic_level<\/th>\n      <th>number_of_grantees<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"grantee_geographic_level","targets":1},{"name":"number_of_grantees","targets":2}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="number-of-grantees-by-state-and-type---county-total-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="number-of-grantees-by-state-and-type---county-total-dataset">Number of Grantees by State and Type - County-Total Dataset</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-50495862b368334b4b4f" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-50495862b368334b4b4f">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73"],["Alabama","Alabama","Alaska","Alaska","Arkansas","Arkansas","California","California","California","Connecticut","District of Columbia","Florida","Florida","Florida","Georgia","Georgia","Georgia","Hawaii","Hawaii","Idaho","Illinois","Illinois","Kansas","Kentucky","Kentucky","Louisiana","Louisiana","Maine","Massachusetts","Michigan","Michigan","Mississippi","Mississippi","Missouri","Missouri","Nevada","New Hampshire","New Hampshire","New Mexico","New Mexico","New Mexico","New York","New York","New York","North Carolina","North Carolina","North Carolina","North Dakota","Oklahoma","Oklahoma","Oklahoma","Rhode Island","South Carolina","South Carolina","South Dakota","Tennessee","Tennessee","Texas","Texas","Texas","Utah","Utah","Utah","Vermont","Virginia","Virginia","Washington","Washington","Washington","West Virginia","Wisconsin","Wisconsin","Wisconsin"],["County","State","County","State","County","State","City","County","State","State","State","City","County","State","City","County","State","County","State","State","County","State","State","County","State","County","State","State","State","County","State","County","State","County","State","State","County","State","City","County","State","City","County","State","City","County","State","State","City","County","State","State","County","State","State","County","State","City","County","State","City","County","State","State","County","State","City","County","State","State","City","County","State"],[2,1,1,2,1,1,17,17,1,2,1,5,19,1,1,7,1,1,1,1,4,2,2,2,1,3,1,1,1,3,1,1,1,5,1,1,1,1,1,2,1,6,2,1,2,6,2,1,2,3,1,1,2,2,1,4,1,10,16,1,1,3,2,1,1,1,1,10,1,1,1,2,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>grantee_state<\/th>\n      <th>grantee_geographic_level<\/th>\n      <th>number_of_grantees<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":3},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"grantee_state","targets":1},{"name":"grantee_geographic_level","targets":2},{"name":"number_of_grantees","targets":3}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="spending-percentage-by-grantee---county-total-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="spending-percentage-by-grantee---county-total-dataset">Spending Percentage by Grantee - County-Total Dataset</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-561f7218d56364b24476" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-561f7218d56364b24476">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110","111","112","113","114","115","116","117","118","119","120","121","122","123","124","125","126","127","128","129","130","131","132","133","134","135","136","137","138","139","140","141","142","143","144","145","146","147","148","149","150","151","152","153","154","155","156","157","158","159","160","161","162","163","164","165","166","167","168","169","170","171","172","173","174","175","176","177","178","179","180","181","182","183","184","185","186","187","188","189","190","191","192","193","194","195","196","197","198","199","200","201","202","203","204","205","206","207","208","209"],["ALACHUA COUNTY, FLORIDA","ALAMEDA COUNTY, CALIFORNIA","ALASKA HOUSING FINANCE CORPORATION","ANAHEIM CITY, CALIFORNIA","ARLINGTON CITY, TEXAS","BENTON COUNTY HUMAN SERVICES","BERKELEY COUNTY","BERNALILLO COUNTY NEW MEXICO","BEXAR COUNTY","BRAZORIA COUNTY","BRAZOS COUNTY, TEXAS","BROWARD COUNTY, FLORIDA","BROWN COUNTY, WISCONSIN","BUNCOMBE COUNTY","CA DEPARTMENT OF HOUSING AND COMMUNITY DEVELOPMENT","CABARRUS COUNTY GOVERNMENT","CAMERON COUNTY, TEXAS","CHARLESTON COUNTY, SOUTH CAROLINA","CHATHAM COUNTY, GA","CHEROKEE COUNTY, GEORGIA","CHESTERFIELD COUNTY, VIRGINIA","CITY AND COUNTY OF HONOLULU","CITY AND COUNTY OF SAN FRANCISCO","CITY OF ALBUQUERQUE","CITY OF ATLANTA, GEORGIA","CITY OF AUSTIN","CITY OF BAKERSFIELD","CITY OF CHULA VISTA","CITY OF DALLAS","CITY OF FREMONT, CALIFORNIA","CITY OF FRESNO","CITY OF GARLAND, TEXAS","CITY OF HOUSTON","CITY OF IRVINE","CITY OF JACKSONVILLE DUVAL COUNTY PORTION","CITY OF LONG BEACH","CITY OF LOS ANGELES","CITY OF MADISON, WISCONSIN","CITY OF MIAMI","CITY OF OKLAHOMA CITY","CITY OF PORT ST. LUCIE, FLORIDA","CITY OF SACRAMENTO","CITY OF SAN ANTONIO","CITY OF SAN DIEGO","CITY OF SAN JOSE","CITY OF ST LOUIS","CITY OF ST. LOUIS MISSOURI","CITY OF STOCKTON","CITY OF TAMPA","CITY OF TULSA","CLARK COUNTY, WASHINGTON","CLEVELAND COUNTY","COBB COUNTY GOVERNMENT","COMMONWEALTH OF KENTUCKY","COMMONWEALTH OF MASSACHUSETTS","CONNECTICUT DEPARTMENT OF HOUSING","CONNECTICUT OFFICE OF POLICY AND MANAGEMENT","COUNTY OF DANE","COUNTY OF GREENE","COUNTY OF JOHNSTON, NC","COUNTY OF MACOMB, MICHIGAN","COUNTY OF MARIN","COUNTY OF MERCED","COUNTY OF MONROE","COUNTY OF MONTEREY","COUNTY OF ORANGE","COUNTY OF SAN BERNARDINO","COUNTY OF SAN DIEGO, CALIFORNIA","COUNTY OF SANTA CLARA","COUNTY OF SOLANO","COUNTY OF STANISLAUS","COUNTY OF TULSA","COUNTY OF WASHINGTON, AR","DALLAS COUNTY","DAVIS COUNTY, UTAH","DENTON COUNTY","DISTRICT OF COLUMBIA","DOÑA ANA COUNTY","ESCAMBIA COUNTY, FL","ETROPOLITAN GOVERNMENT OF NASHVILLE AND DAVIDSON COUNTY","FORSYTH COUNTY, NORTH CAROLINA","FORT BEND COUNTY","FRESNO COUNTY, CALIFORNIA","FRISCO CITY, TEXAS","FULTON COUNTY, GEORGIA","GALVESTON COUNTY","GENESEE COUNTY","GENESEE COUNTY, MICHIGAN","GOVERNOR DAVID Y. IGE AND THE STATE OF HAWAII","GREENSBORO CITY, NORTH CAROLINA","GUILFORD COUNTY","GWINNETT COUNTY BOARD OF COMMISSIONERS","HALL COUNTY, GEORGIA","HARRIS COUNTY","HAYS COUNTY, TEXAS","HENRY COUNTY, GEORGIA","HILLSBOROUGH COUNTY, FLORIDA","HINDS COUNTY BOARD OF SUPERVISORS","IL DEPT OF COMMERCE &amp; ECONOMIC OPPORTUNITY","ILLINOIS EMERGENCY MANAGEMENT AGENCY","IRVING CITY, TEXAS","JEFFERSON COUNTY, MISSOURI GOVERNMENT","JEFFERSON COUNTY, TEXAS","JEFFERSON PARISH","JEFFERSON PARISH, LOUISIANA","KERN COUNTY, CALIFORNIA","KITSAP COUNTY","KITSAP COUNTY, WASHINGTON","KNOX COUNTY, TENNESSEE","KS HOUSING RESOURCES CORP FOR THE STATE OF KANSAS","LAKE COUNTY, FLORIDA","LAKE COUNTY, ILLINOIS","LAREDO CITY, TEXAS","LEE COUNTY","LEON COUNTY","LEXINGTON","LONG BEACH CITY, CALIFORNIA","LOUISVILLE","LUBBOCK CITY, TEXAS","LUBBOCK COUNTY","MANATEE COUNTY","MARION COUNTY BCC","MCHENRY COUNTY, ILLINOIS","MCLENNAN COUNTY, TEXAS","METROPOLITAN GOVERNMENT OF NASHVILLE AND DAVIDSON COUNTY","MIAMI","MOBILE COUNTY, ALABAMA","MODESTO, CITY OF","MONTEREY COUNTY, CALIFORNIA","MONTGOMERY COUNTY COMMISSION","MUNICIPALITY OF ANCHORAGE","NEW HANOVER COUNTY","NEW YORK STATE","NORTH CAROLINA","NORTH DAKOTA DEPARTMENT OF HUMAN SERVICES","OAKLAND CITY, CALIFORNIA","OF NORTH CAROLINA","OKALOOSA COUNTY BOARD OF COUNTY COMMISSIONERS","OKLAHOMA COUNTY, OKLAHOMA","ONONDAGA COUNTY","OSCEOLA COUNTY","PALM BEACH COUNTY, FLORIDA","PIERCE COUNTY, WASHINGTON","PINELLAS COUNTY, FLORIDA","POLK COUNTY, FLORIDA","ROCKINGHAM COUNTY, NEW HAMPSHIRE","RUTHERFORD, COUNTY OF","SACRAMENTO COUNTY","SALT LAKE CITY CITY, UTAH","SALT LAKE COUNTY, UTAH","SAN BERNARDINO CITY, CALIFORNIA","SAN JOAQUIN COUNTY, CALIFORNIA","SANTA BARBARA COUNTY","SARASOTA COUNTY BOARD OF COUNTY COMMISSIONERS","SC STATE HOUSING FINANCE &amp; DEVELOPMENT AUTHORITY","SEMINOLE COUNTY, FLORIDA","SMITH COUNTY, TEXAS","SNOHOMISH COUNTY, WASHINGTON","SOUTH DAKOTA HOUSING DEVELOPMENT AUTHORITY","ST. LOUIS COUNTY MISSOURI","ST. LUCIE COUNTY, FLORIDA","ST. PETERSBURG CITY, FLORIDA","ST. TAMMANY PARISH, LOUISIANA","STATE OF ALABAMA","STATE OF ALASKA","STATE OF ARKANSAS DEPARTMENT OF HUMAN SERVICES","STATE OF FLORIDA","STATE OF GEORGIA","STATE OF IDAHO","STATE OF KANSAS","STATE OF LOUISIANA","STATE OF MAINE","STATE OF MICHIGAN","STATE OF MISSISSIPPI","STATE OF MISSOURI","STATE OF NEVADA","STATE OF NEW HAMPSHIRE TREASURY","STATE OF NEW MEXICO","STATE OF OKLAHOMA","STATE OF RHODE ISLAND","STATE OF SOUTH CAROLINA","STATE OF TENNESSEE","STATE OF UTAH","STATE OF UTAH, DEPARTMENT OF WORKFORCE SERVICES","STATE OF VERMONT, OFFICE OF THE TREASURER","STATE OF WEST VIRGINIA","STOCKTON CITY, CALIFORNIA","TACOMA CITY, WASHINGTON","TEXAS DEPARTMENT OF HOUSING AND COMMUNITY AFFAIRS","THE COUNTY OF VOLUSIA, FLORIDA","THURSTON COUNTY","THURSTON COUNTY, WASHINGTON","TOWN OF HEMPSTEAD, HEMPSTEAD, NY","TOWN OF HEMPSTEAD, NEW YORK","TOWN OF ISLIP","TOWN OF ISLIP CDA","TOWN OF OYSTER BAY","TRAVIS COUNTY","UTAH COUNTY","VA DEPARTMENT OF HOUSING &amp; COMMUNITY DEVELOPMENT","WASHINGTON STATE GOVERNOR'S OFFICE","WEBB COUNTY","WHATCOM COUNTY, WASHINGTON","WILL COUNTY, ILLINOIS","WINNEBAGO COUNTY, ILLINOIS","WINSTON","WISCONSIN, STATE OF","YAKIMA COUNTY , WASHINGTON","YONKERS CITY, NEW YORK"],[17035638.18,59020346.63,53699293.49,22255164.45,12264.09,8318725.9,10896091.38,11585057.91,18271690.98,16438310.69,4055717.44,90909777.34,22264017.16,12674574.15,3021911736.54,8977328.460000001,13232675.36,37852638.41,14567828.38,6364336.8,18392111.77,107112469.94,21950042.55,25392493.985,32463040.86,55584372.501,18551643.23,17945194.62,66267941.711,11485451.64,29123312.05,10896638.25,151427884.44,8117684.32,65440298.44,15071922.02,106694050.14,47832525.4,34243632.17,28910542.52,4333393.57,29155234,105039134.96,73853002.27,23749033.61,10776209.74,8132954.666,9694312.5,19293398.38,10864183.32,23925007.65,6730293.15,48749242.73,291446539.52,590001345.1799999,103374936.37,224966542,31884304.86,14259993.17,8714778.539999999,49451735.6,12923031.56,2753525.26,38923940.4,12712048.11,21206876.64,36030957.18,114413839.06,17389022.74,7353578.07,2672379.21,8472049.630000001,12586071.1,40043830.18,17256073.63,19122002.92,330596646.1,14353685.59,5964442.63,46145503.09,6336163.73,31016535.14,15740982.34,1534211.08,98294319.75,4218688.29,11272054.95,7989155.13,139853542.94,9837335.390000001,12035220.109,86036872.97,14479683.78,150245644.73,3928115.24,29066970.1,69644213.53,13014078.83,111216730.6600614,68300990.36333333,11777457.96,6894485.33,8525290.390000001,19936730.9,13346097.92,30424400.99,7042985.49,5585749.75,57030255.02,140206591.09,14020589.4,32731869.55,6439540.68,37450460.48,16949958.1,33344156.22,19702993.08,74367998.59,14003930.804,1069157.55,16879931.8,15353872,11712042.79,10800263.96,23916930.23,142974077.72,19461658.65,3354544,8075402.34,20574836.59,43632488.55349712,12376502.2,2349301682.89,454940196.349,116755015.18,27888904.81,358172671.1,293144.92,16280182.61,27002012.79,16942326.4,89151263.28,41427423.67,40952685.44,26122505.02,8541926.32,26426217.97,65663954,16286900.74,57696768.03,12822242.9,2259445.6,30943304.02,20174524.29,168502712.53,22412546.7,8016413.15,48761988.18,40668763.22,49615795.52,4811871.32,12898848.8,11255049.027,176512220.19,153867413.23,85529938.61,1049007923.65,401073346.23925,70544546.336,99789238.41,144582087.74,289198889.78,533674617.91,253457584.23,392828372.72,4362191.99,292894687.49,194817049.7,299910451.9252849,272393373.97,146798865.17,176184019.26,110339157.78,92919470.56,213787355.3665522,168158143.54,9390353.98,11546899.74,1754317818.36,27224829.79,6536926.95,8314588.77,12487112.59,20474770.5,8485443.27,8799041.619999999,9120492.24,17690082.89,27292302.54,906010905.5039001,239035655.4,594369.26,3665119.93,26815953.01,13773389.08,11865839.46,256884383.51,9351645.470000001,12437421.55],[32910907.25,70673219.25,294713008.34,25448918.5,27471909.01,11215810.8,12346129,17413121.27,22906346.15,18873470.65,4278872.57,113922322.14,32165139.5,14502292.89,4467773025.3,9602115.030000001,21249961.94,42574426.98,20669792.12,9039337.709999999,19717473.76,131663523.97,26209982.7,31372041.2,49839715.95,66440351.2,20458436.6,19716824.47,95601603.63,13211238.36,35618342,11872482.88,178844794.31,8544930.9,74791387.96000001,41130086.45999999,118319705.8,88758164.28,42837837.40000001,38665928.33,9256584.99,34212603.19,121727814.37,119698500.12,30379739.9,21432001.2,21432001.2,21510782.94,21892305.98,21573481.9,26838636.61,8454143.220000001,68990261.30000001,375119771.74,868941362.5899999,471252147.55,471252147.55,61729351.44,15260084.03,9890691.140000001,52083222,17191177.62,3220000.6,46961055.47,24840479.58,40576556.3,40826713.83,129927709.99,26938648.2,13309203.8,3307365.62,13899858.11,15838920,53454990.81,18156456.9,31108206.54,418546507.08,30226980.54,8326800.09,74760598.42,7258478.6,38605804.95,19773804.2,6058027.1,109979013.2,8180061.3,24855273.86,24855273.86,205427062.3,16543565.56,13866099.27,100469405.69,17623094.9,172150342.06,4408031.72,44081171.07,77994124.36,15435821.86,1069254145.11,1069254145.11,13075761.33,8862692.02,11123642.68,64771617.87,64771617.87,35475841.6,14362713.96,14362713.96,62218001.63,331632367.4,15449123.49,37517516.8,8588685.74,41679062.8,22003668.42,51689217.35,41130086.45999999,115093546.95,14609700.67,1129337.8,18941276.66,19773481.6,16053151.33,12498191.89,74760598.42,182569393.57,22169574.9,3727915.46,24840479.58,22789315.3,58320841.66,12667787.6,2890974803.03,1043858808.3,200864082,33523098.83,1043858808.3,543663.78,23117689.41,29321169.07,23025547.5,117755986.15,46251778.79,48952639.19,32708069.21,10765099.76,30132282.4,75867741.39,23206602.07,78291433.58,15041061.34,3491549.92,33902708.81,22279722.45,444563974.37,25520182.3,11172025.98,55630406.61,94913972.93000001,59600390.2,6839497.1,20311546.83,20158654.51,293599637.1,294713008.34,141861956.92,1616755922.4,764304267.6700001,129520026.82,331632367.4,256693750.84,352000000,1116456441.17,307009211.6,602859155.1,225575576.62,326499190.44,257928314.05,378469668.06,352000000,444563974.37,492067379.53,221419655.13,221419655.13,320826860.8,260656771.74,21510782.94,12153255.77,2687062463.78,29106452.71,15955461.58,15955461.58,45469859.7,45469859.7,19761613.1,19761613.1,13400321.85,19914007.42,28763387.39,1014049353.24,615697767.37,853279,6911585.2,36676044.4,15074549.09,13395634.5,334197309.2,11867875.59,14559098.5],[51.76289444284463,83.51161480450037,18.22087657157265,87.45033487375898,0.04464229258889788,74.16963470888793,88.25512336700841,66.53062211172438,79.76693821157505,87.0974448464782,94.78472129400197,79.79979308030633,69.21784735303262,87.39703608344377,67.63798696638324,93.49324010337334,62.27152499078782,88.90933148150616,70.47883353361951,70.4071139300315,93.27823631905265,81.35318477758953,83.7468791995807,80.93988473086667,65.13488337808234,83.66056394506235,90.67967212118251,91.01462888866506,69.31676791476433,86.93697991836096,81.76492900764444,91.78061876472464,84.66999837720913,94.99999959040044,87.49710391121346,36.64451820362159,90.17437071754451,53.89084574699589,79.93781723911206,74.77007217635837,46.81417147556488,85.21781823524549,86.29016753782039,61.69918770574483,78.17392014603786,50.28093102197102,37.94771468191221,45.06722292275616,88.12867131322636,50.35897019479272,89.14390100235423,79.60940541056981,70.66104956178792,77.69426233336617,67.89886758542825,21.93622605380953,47.73804070062747,51.6517736153296,93.44636072754314,88.11091577569977,94.94753531185148,75.17246255989762,85.51319089816319,82.88557403669445,51.17472901060632,52.26386508309972,88.25338558971647,88.0596133563856,64.55046523084256,55.2518255825341,80.80084021675232,60.9506195167916,79.46293749826377,74.91130308549013,95.04097481706356,61.46931966461092,78.98683670935773,47.48633615919879,71.62946828954074,61.72436292010087,87.293275618392,80.34163561715866,79.60523013573686,25.32525943966147,89.37552437504503,51.57281999830491,45.35075740259818,32.14269605315867,68.07941532832794,59.46321156900594,86.79600423053945,85.63489788669418,82.16311528799632,87.27583281689589,89.11268088606224,65.93965040956431,89.29417965966378,84.3108902657419,10.4013373404898,6.3877227575589,90.07091566422773,77.79222514380005,76.64117443585486,30.78004156081765,20.60485496407749,85.7608998626265,49.03659231545401,38.89062864829204,91.66198451558981,42.2777161919449,90.753300076055,87.24423240612769,74.97702064018003,89.85437282913185,77.03241921512286,64.50892067917913,47.90408865092379,64.61526346243168,95.85364628829181,94.67119138312735,89.11718097464293,77.64880414382867,72.95790433441333,86.41461144984869,31.99135739341772,78.3121830687253,87.78543899820109,89.98444401418911,32.50904361162902,90.28282034432161,74.81457282092509,97.70058190745162,81.26330538847041,43.58254131034284,58.12637780606291,83.19309903725866,34.31236755891444,53.92025931909608,70.42305275957939,92.0905054144896,73.58055829074205,75.70847665140121,89.56936306838202,83.65776823809283,79.86562842423433,79.34832477576595,87.70068466502889,86.55055863921508,70.18218647810855,73.69486723096482,85.24825881735285,64.71182288008073,91.27088986728079,90.55105751553022,37.90291662044554,87.82283150069817,71.7543368083002,87.65348152467872,42.84802539031173,83.24743404112814,70.3541685835352,63.50500485245417,55.83234248802055,60.12004031526781,52.20923708005741,60.2909620499827,64.88350585985768,52.47561255439954,54.46613011749838,30.09031934739914,56.32473999342492,82.15877550568183,47.80075587639865,82.55699655039275,65.16088698277115,1.933805093336172,89.70763054428602,75.53147098935182,79.24292941693261,77.38448124147727,33.02086395507675,35.80485652763303,49.83259400129479,41.9653216899128,66.63636418517493,64.51324568223166,43.65417105547717,95.01075233274715,65.28757116766573,93.53537533842611,40.96983918155002,52.11123932899721,27.4623952490445,45.02932411731193,42.9390213595468,44.52592799724431,68.06174017380037,88.83236064396324,94.88556465880147,89.34583929362952,38.82353779209872,69.65708285332231,53.0286442826459,73.11571748997011,91.36849797475435,88.57989862294318,76.8660837290787,78.79797356386005,85.42714062962072]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>grantee_name<\/th>\n      <th>sum_grantee_payments<\/th>\n      <th>total_allocation<\/th>\n      <th>pct_reported_spending<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"grantee_name","targets":1},{"name":"sum_grantee_payments","targets":2},{"name":"total_allocation","targets":3},{"name":"pct_reported_spending","targets":4}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="grantees-passing-with-low-goodness-percentages---county-total-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="grantees-passing-with-low-goodness-percentages---county-total-dataset">Grantees Passing with Low Goodness Percentages - County-Total Dataset</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-71af871b28dc906d1115" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-71af871b28dc906d1115">{"x":{"filter":"none","vertical":false,"data":[["1","2"],["Florida","Massachusetts"],["VOLUSIA COUNTY","STATE OF MASSACHUSETTS"],[0.9839711841512832,0.9783082725073992],[0.8944912973263951,0.8994848103563761],["Passes","Passes"],["Local Government","State/DC"],["County","State"],["ERA-2101112110","ERA-2101080866"],["SLT-0162","SLT-0337"],["ERA-2101112110_SLT-0162","ERA-2101080866_SLT-0337"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>grantee_state<\/th>\n      <th>grantee_name<\/th>\n      <th>ok_percent_era1<\/th>\n      <th>ok_percent_era2<\/th>\n      <th>threshold_passing_with_complete_geography_label<\/th>\n      <th>grantee_type<\/th>\n      <th>geographic_level<\/th>\n      <th>grantee_id_era1<\/th>\n      <th>grantee_id_era2<\/th>\n      <th>grantee_id_combined<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[3,4]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"grantee_state","targets":1},{"name":"grantee_name","targets":2},{"name":"ok_percent_era1","targets":3},{"name":"ok_percent_era2","targets":4},{"name":"threshold_passing_with_complete_geography_label","targets":5},{"name":"grantee_type","targets":6},{"name":"geographic_level","targets":7},{"name":"grantee_id_era1","targets":8},{"name":"grantee_id_era2","targets":9},{"name":"grantee_id_combined","targets":10}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="grantees-with-low-allocation-spending---county-total-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="grantees-with-low-allocation-spending---county-total-dataset">Grantees with Low Allocation Spending - County-Total Dataset</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-606b50c37fb6198cf72b" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-606b50c37fb6198cf72b">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43"],["Tennessee","California","Washington","Florida","California","North Dakota","Louisiana","Louisiana","Florida","Florida","Florida","Georgia","California","California","Texas","California","Georgia","Georgia","Idaho","Arkansas","South Carolina","North Carolina","Hawaii","Utah","South Dakota","New Hampshire","Washington","Alabama","Georgia","California","Missouri","Florida","Georgia","New York","California","Oklahoma","Wisconsin","Texas","Florida","Texas","Texas","Alaska","Kentucky"],["STATE OF TENNESSEE","ORANGE COUNTY","WHATCOM COUNTY","OKALOOSA COUNTY","SOLANO COUNTY","STATE OF NORTH DAKOTA","STATE OF LOUISIANA","JEFFERSON PARISH","CITY OF PORT ST LUCIE","ESCAMBIA COUNTY","ST LUCIE COUNTY","CITY OF ATLANTA","SAN JOAQUIN COUNTY","SANTA CLARA COUNTY","DENTON COUNTY","STATE OF CALIFORNIA","COBB COUNTY","CHATHAM COUNTY","STATE OF IDAHO","STATE OF ARKANSAS","STATE OF SOUTH CAROLINA","CITY OF GREENSBORO","STATE OF HAWAII","SALT LAKE CITY","STATE OF SOUTH DAKOTA","ROCKINGHAM COUNTY","STATE OF WASHINGTON","STATE OF ALABAMA","STATE OF GEORGIA","CITY OF SAN JOSE","JEFFERSON COUNTY","ALACHUA COUNTY","CHEROKEE COUNTY","TOWN OF OYSTER BAY","CITY OF SAN DIEGO","CITY OF TULSA","CITY OF MADISON","WEBB COUNTY","CITY OF ST PETERSBURG","SMITH COUNTY","CAMERON COUNTY","MUNICIPALITY OF ANCHORAGE","LOUISVILLE/JEFFERSON COUNTY"],[0.5067660469740295,0.5227908323013603,0.530286442826459,0.5392025931909608,0.552518255825341,0.5527867735241604,0.5534601106187782,0.5668588304051974,0.5833949429806545,0.5993098159987124,0.6192113957012367,0.6412371246369926,0.6471182288008073,0.6491217603116403,0.6592231310416778,0.6744212484566378,0.6833701555708166,0.6845840586686122,0.6948010046612836,0.7058865548885029,0.740827610324241,0.7499862695888719,0.7530423932505612,0.7545742957370714,0.7550978819625115,0.7608212933773921,0.7666651273664947,0.777218266994306,0.7804996353223622,0.7822658682472788,0.7823001088190069,0.786305343591653,0.7866467534103212,0.7999389198446453,0.8517984085263344,0.8598923428811979,0.8893584338035514,0.8928012623796333,0.9028082014154986,0.9117000271156884,0.9241773013641178,0.963718835914827,0.9747103436413694],[0.454507832291441,null,null,null,null,0.6669256179605264,0.7128167651470314,0.6366924410327589,0.2610029902873423,0.8241627748841499,0.8302146694142523,0.7519921224841347,null,null,0.7954327365663207,0.6967456798185601,0.7666833885914841,0.8360384362854484,0.9228428261589712,null,0.7021565306103789,0.4113881906490882,0.6634737823790998,0.6206287354121115,0.5177779647215748,0.8832992663309086,0.8430116411331163,0.7860379658913528,0.718241129574287,null,0.7690064671695328,0.5208411937757328,0.8237999180568293,0.780535788866905,0.3512486986481903,0.3498922011036372,0.3681435651028664,0.4991864146837939,0.4606143602192232,0.3888832224650493,0.3846937414939227,0.4229920257623205,0.4829786313093071],["Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes","Passes"],["State/DC","Local Government","Local Government","Local Government","Local Government","State/DC","State/DC","Local Government","Local Government","Local Government","Local Government","Local Government","Local Government","Local Government","Local Government","State/DC","Local Government","Local Government","State/DC","State/DC","State/DC","Local Government","State/DC","Local Government","State/DC","Local Government","State/DC","State/DC","State/DC","Local Government","Local Government","Local Government","Local Government","Local Government","Local Government","Local Government","Local Government","Local Government","Local Government","Local Government","Local Government","Local Government","Local Government"],["State","County","County","County","County","State","State","County","City","County","County","City","County","County","County","State","County","County","State","State","State","City","State","City","State","County","State","State","State","City","County","County","County","City","City","City","City","County","City","County","County","County","County"],["ERA-2101112138","ERA-2101060129","ERA-2101080820","ERA-2101060060","ERA-2101112215","ERA-2101122971","ERA-2101112003","ERA-2101080811","ERA-2101070630","ERA-2101070446","ERA-2101123106","ERA-2101070562","ERA-2101111988","ERA-2101091167","ERA-2101091133","ERA-2101091157","ERA-2101123162","ERA-2101070333","ERA-2101060177","ERA-2101208170","ERA-2101112289","ERA-2101060119","ERA-2101112170","ERA-2101112470","ERA-2101112350","ERA-2101123939","ERA-2101112480","ERA-2101070427","ERA-2101112336","ERA-2101060091","ERA-2101123645","ERA-2101070387","ERA-2101111936","ERA-2101080836","ERA-2101112156","ERA-2101070472","ERA-2101111887","ERA-2101134122","ERA-2101070425","ERA-2101123472","ERA-2101111971","ERA-2101060120","ERA-2101081038"],["SLT-8226",null,null,null,null,"SLT-0190","SLT-0108","SLT-0369","SLT-7624","SLT-0466","SLT-3817","SLT-0322",null,null,"SLT-0452","SLT-0172","SLT-0550","SLT-0128","SLT-0065",null,"SLT-0424","SLT-0350","SLT-0106","SLT-0421","SLT-0095","SLT-1181","SLT-0295","SLT-0329","SLT-0116",null,"SLT-0333","SLT-0274","SLT-0121","SLT-0500","SLT-0340","SLT-0265","SLT-0405","SLT-0462","SLT-0188","SLT-0111","SLT-0706","SLT-0469","SLT-0200"],["ERA-2101112138_SLT-8226","ERA-2101060129","ERA-2101080820","ERA-2101060060","ERA-2101112215","ERA-2101122971_SLT-0190","ERA-2101112003_SLT-0108","ERA-2101080811_SLT-0369","ERA-2101070630_SLT-7624","ERA-2101070446_SLT-0466","ERA-2101123106_SLT-3817","ERA-2101070562_SLT-0322","ERA-2101111988","ERA-2101091167","ERA-2101091133_SLT-0452","ERA-2101091157_SLT-0172","ERA-2101123162_SLT-0550","ERA-2101070333_SLT-0128","ERA-2101060177_SLT-0065","ERA-2101208170","ERA-2101112289_SLT-0424","ERA-2101060119_SLT-0350","ERA-2101112170_SLT-0106","ERA-2101112470_SLT-0421","ERA-2101112350_SLT-0095","ERA-2101123939_SLT-1181","ERA-2101112480_SLT-0295","ERA-2101070427_SLT-0329","ERA-2101112336_SLT-0116","ERA-2101060091","ERA-2101123645_SLT-0333","ERA-2101070387_SLT-0274","ERA-2101111936_SLT-0121","ERA-2101080836_SLT-0500","ERA-2101112156_SLT-0340","ERA-2101070472_SLT-0265","ERA-2101111887_SLT-0405","ERA-2101134122_SLT-0462","ERA-2101070425_SLT-0188","ERA-2101123472_SLT-0111","ERA-2101111971_SLT-0706","ERA-2101060120_SLT-0469","ERA-2101081038_SLT-0200"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>grantee_state<\/th>\n      <th>grantee_name<\/th>\n      <th>percent_of_allocation_spent_era1<\/th>\n      <th>percent_of_allocation_spent_era2<\/th>\n      <th>threshold_passing_with_complete_geography_label<\/th>\n      <th>grantee_type<\/th>\n      <th>geographic_level<\/th>\n      <th>grantee_id_era1<\/th>\n      <th>grantee_id_era2<\/th>\n      <th>grantee_id_combined<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[3,4]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"grantee_state","targets":1},{"name":"grantee_name","targets":2},{"name":"percent_of_allocation_spent_era1","targets":3},{"name":"percent_of_allocation_spent_era2","targets":4},{"name":"threshold_passing_with_complete_geography_label","targets":5},{"name":"grantee_type","targets":6},{"name":"geographic_level","targets":7},{"name":"grantee_id_era1","targets":8},{"name":"grantee_id_era2","targets":9},{"name":"grantee_id_combined","targets":10}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+</section>
+<section id="geographic-county-level---county-total-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="geographic-county-level---county-total-dataset">Geographic County Level - County-Total Dataset</h2>
+<section id="map-of-included-counties---county-total-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="map-of-included-counties---county-total-dataset">Map of Included Counties - County-Total Dataset</h3>
+<section id="number-and-of-counties-included-in-the-final-output-by-state" class="level4">
+<h4 class="anchored" data-anchor-id="number-and-of-counties-included-in-the-final-output-by-state">Number and % of counties included in the final output, by state</h4>
+<div class="cell">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-25f8083291fb41db05eb" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-25f8083291fb41db05eb">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37"],["Alabama","Alaska","Arkansas","California","Connecticut","District of Columbia","Florida","Georgia","Hawaii","Idaho","Illinois","Kansas","Kentucky","Louisiana","Maine","Massachusetts","Michigan","Mississippi","Missouri","Nevada","New Hampshire","New Mexico","New York","North Carolina","North Dakota","Oklahoma","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin"],[63,30,73,55,8,1,61,155,3,42,95,102,120,59,16,13,82,81,112,13,10,33,62,94,51,77,5,41,62,94,234,29,14,132,27,55,70],[94.02985074626866,100,97.33333333333334,34.375,100,100,91.04477611940298,96.875,60,95.45454545454545,93.13725490196079,97.14285714285714,100,92.1875,100,86.66666666666667,98.79518072289156,98.78048780487805,97.39130434782609,76.47058823529412,100,100,100,94,96.22641509433963,100,100,89.13043478260869,93.93939393939394,98.94736842105263,92.1259842519685,100,100,99.24812030075188,69.23076923076923,100,97.22222222222221]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>grantee_state<\/th>\n      <th>n<\/th>\n      <th>pct_total_counties_covered<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"grantee_state","targets":1},{"name":"n","targets":2},{"name":"pct_total_counties_covered","targets":3}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="outputs/aggregation_descriptives/grantee_thresholding_flowcharts/era_grantees_county_total_thresholding_flowchart_2025-03-18.png" class="img-fluid figure-img" width="270"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>We employed a wider threshold for ERA2 because programs were likely accurately reporting lower numbers. By 2023, ERA1 had concluded, but ERA2 funds were still being allocated. Therefore, it was possible than grantees could have spent well below their full allocation.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
