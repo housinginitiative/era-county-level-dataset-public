@@ -24,6 +24,7 @@ library(DT)
 library(janitor)
 library(this.path)
 library(snakecase)
+library(RColorBrewer)
 
 options(scipen = 999)
 options(tigris_use_cache = TRUE)
@@ -139,16 +140,33 @@ Please note that the aggregated datasets do not include U.S. territories or paym
 
 # Combine data and prep
 counties_included_total <- county_total_aggregated %>% 
-  distinct(county_geoid_coalesced) %>% 
-  mutate(source = "Included only in County-Total Dataset")
+    # have to calculate if ALL months are -99999
+  group_by(county_geoid_coalesced) %>% 
+  mutate(avg = mean(sum_assistance_amount)) %>% 
+  ungroup() %>% 
+  mutate(source = ifelse(avg == -99999, 
+                         "Suppressed in County-Total", "Included only in County-Total")) %>% 
+  select(county_geoid_coalesced, source) %>% 
+  distinct(county_geoid_coalesced, .keep_all = T)
 
 counties_included_monthly <- county_month_aggregated %>% 
-  distinct(county_geoid_coalesced) %>% 
-  mutate(source = "Included in County-Month and County-Total Datasets")
+  # have to calculate if ALL months are -99999
+  group_by(county_geoid_coalesced) %>% 
+  mutate(avg = mean(sum_assistance_amount)) %>% 
+  ungroup() %>% 
+  mutate(source = ifelse(avg == -99999, 
+                         "Suppressed in County-Month", "Included in County-Month and County-Total")) %>%
+  select(county_geoid_coalesced, source) %>% 
+  distinct(county_geoid_coalesced, .keep_all = T)
 
 counties_included_combined <- 
   full_join(counties_included_total, counties_included_monthly, by = "county_geoid_coalesced") %>% 
-  mutate(source = coalesce(source.y, source.x))
+   mutate(source = case_when(
+    source.y == "Suppressed in County-Month" & source.x == "Suppressed in County-Total" ~ "Data suppressed", 
+    source.y == "Suppressed in County-Month" & source.x == "Included only in County-Total" ~ "Included only in County-Total",
+    is.na(source.y) & source.x == "Suppressed in County-Total" ~ "Data suppressed",
+    .default = coalesce(source.y, source.x)
+  ))
 
 ```
 
@@ -160,7 +178,9 @@ map_data <- counties %>%
   mutate(source = replace_na(source, "No data")) %>% 
   st_transform(map_data, crs = 4326)
 
-pal <- colorFactor(palette = c("#b69ee2", "#7ebcef", "lightgray"), domain = map_data$source)
+# pal <- colorFactor(palette = c("yellow", "#b69ee2", "#7ebcef", "lightgray"), domain = map_data$source)
+bupu <- brewer.pal(n = 4, name = "BuPu") %>% rev()
+pal <- colorFactor(palette = bupu, domain = map_data$source)
 
 labels <- 
   sprintf(
@@ -178,7 +198,7 @@ map <- leaflet() %>%
     data = map_data,
     fillColor = ~ pal(source),
     color = "black",
-    fillOpacity = 0.7,
+    fillOpacity = 0.8,
     weight = 0.2,
     smoothFactor = 0.2,
     label = labels
