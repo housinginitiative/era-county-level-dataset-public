@@ -132,7 +132,7 @@ counties <- counties_raw %>%
 
 ### Map of counties included in final outputs
 
-The map below shows which counties are a part of the county-total aggregation, the county-month aggregation, or both.
+The map below shows which counties are part of the county-total aggregation and/or the county-month aggregation. Counties whose data are fully suppressed due to small counts are included in a different color.
 
 Please note that the aggregated datasets do not include U.S. territories or payments made by Tribal grantees.
 
@@ -161,12 +161,17 @@ counties_included_monthly <- county_month_aggregated %>%
 
 counties_included_combined <- 
   full_join(counties_included_total, counties_included_monthly, by = "county_geoid_coalesced") %>% 
-   mutate(source = case_when(
-    source.y == "Suppressed in County-Month" & source.x == "Suppressed in County-Total" ~ "Data suppressed", 
-    source.y == "Suppressed in County-Month" & source.x == "Included only in County-Total" ~ "Included only in County-Total",
-    is.na(source.y) & source.x == "Suppressed in County-Total" ~ "Data suppressed",
-    .default = coalesce(source.y, source.x)
-  ))
+  mutate(source = 
+           case_when(
+             source.y == "Suppressed in County-Month" & source.x == "Suppressed in County-Total" ~ 
+               "Data suppressed due to small counts",
+             source.y == "Suppressed in County-Month" & source.x == "Included only in County-Total" ~ 
+               "Included only in County-Total",
+             is.na(source.y) & source.x == "Suppressed in County-Total" ~ 
+               "Data suppressed due to small counts",
+             .default = coalesce(source.y, source.x)
+             )
+         )
 
 ```
 
@@ -176,11 +181,16 @@ map_data <- counties %>%
   left_join(counties_included_combined, 
             by = join_by("GEOID" == "county_geoid_coalesced")) %>%
   mutate(source = replace_na(source, "No data")) %>% 
-  st_transform(map_data, crs = 4326)
+  st_transform(map_data, crs = 4326) %>% 
+  mutate(source = 
+           fct_relevel(source,
+                       "Included in County-Month and County-Total",
+                       "Included only in County-Total",
+                       "Data suppressed due to small counts",
+                       "No data")
+         )
 
-# pal <- colorFactor(palette = c("yellow", "#b69ee2", "#7ebcef", "lightgray"), domain = map_data$source)
-bupu <- brewer.pal(n = 4, name = "BuPu") %>% rev()
-pal <- colorFactor(palette = bupu, domain = map_data$source)
+pal <- colorFactor(palette = c("#8c6bb1", "#8c96c6", "#bfd3e6", "#edf8fb"), domain = map_data$source)
 
 labels <- 
   sprintf(
@@ -224,7 +234,7 @@ map
 
 #### Nationwide
 
-The table below presents county coverage at the nationwide level, both as a percentage of the number of counties and as a percentage of renter households in covered counties in the 2021 5-year ACS. The tabs above the table can be toggled to view data for each dataset.
+The table below presents county coverage at the nationwide level, both as a percentage of the number of counties and as a percentage of renter households in covered counties in the 2021 5-year ACS. The table includes all counties in the dataset, regardless of suppression. The tabs above the table can be toggled to view data for each dataset.
 
 ::: panel-tabset
 
