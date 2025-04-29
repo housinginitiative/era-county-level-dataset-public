@@ -2,8 +2,6 @@
 
 ![](images/combined_logo.png)
 
-## **This website is under construction and is intended for internal review only!**
-
 ## Background
 
 The federal Emergency Rental Assistance (ERA) program was administered by the U.S. Department of the Treasury to alleviate the impact of the COVID-19 pandemic on renter households.
