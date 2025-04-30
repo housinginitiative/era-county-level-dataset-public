@@ -105,6 +105,12 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Data coverage descriptives</span></a>
   </li>  
 </ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://github.com/housinginitiative/era-county-level-dataset-public/blob/449faa9d06e9c4a23bf749edb32d78e9b8f17397/documentation_pdf.pdf"> 
+<span class="menu-text">Download documentation</span></a>
+  </li>  
+</ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
     <a href="https://github.com/chihyunkim/quarto-website-test" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
@@ -178,7 +184,7 @@ ul.task-list li input[type="checkbox"] {
 <p>We highlight the following data limitations:</p>
 <ul>
 <li><strong>Many grantees who participated in ERA are not represented in the data</strong> due to data missingness or quality issues. The county-month dataset reflects reports from 196 grantees (48% of grantees). The county-total dataset reflects reports from 205 grantees (51% of grantees). The drop-off is due to data non-submission (15% of grantees), poor-quality data (6% for county-month, 3% for county-total), spending amounts inconsistent with allocation amounts (10%), and geographic overlap with grantees that did not pass the preceding thresholds (20%).</li>
-<li><strong>Missing grantees may affect entire geographies</strong> even if other grantees serving that geography have good data quality; for example, if a state grantee is missing, every county in that state will be missing. The county-month dataset provides coverage across 2,308 county-equivalents (73% of county-equivalents, 63% of U.S. renter population), while the county-total dataset offers coverage in 2,364 county-equivalents (75% of county-equivalents, 65% of U.S. renter population).</li>
+<li><strong>Missing grantees may affect entire geographies</strong> even if other grantees serving that geography have good data quality; for example, if a state grantee is missing, every county in that state will be missing. The county-month dataset includes 2,308 county-equivalents (73% of county-equivalents, 63% of U.S. renter population), while the county-total dataset includes 2,364 county-equivalents (75% of county-equivalents, 65% of U.S. renter population). But please note that small-population counties may have all cells suppressed due to a low count of unique addresses in that county.</li>
 <li><strong>Not every payment made by a grantee may have been reported by the grantee</strong>. Particularly for ERA2, grantees were required to submit cumulative data up to the reporting period, but not all may have done so. We threshold the data to drop grantees unlikely to be reporting full data, but this may not have screened out every such grantee.</li>
 <li><strong>Grantees may have reported addresses for the payee</strong> (landlord or utility), even though they were required to report addresses for the assisted property. We excluded payments made outside of the geographic jurisdiction of the grantee, since these payments by definition do not record the address of the assisted household, but this may not have filtered out all misreported addresses.</li>
 <li><strong>Up to 20% of a grantee’s records may be dropped</strong> due to data quality issues (for example, missing payment amounts), while still passing our data quality thresholds. Users should consult the data coverage tables included <a href="./data_coverage_descriptives.html#grantees-included-with-less-than-90-variable-quality">here</a> for a list of these grantees.</li>
