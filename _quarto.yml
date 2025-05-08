@@ -18,11 +18,14 @@ website:
     left:
       - text: "About"
         href: index.md
-      - aggregations.md
-      - methods.md
-      - data_coverage_descriptives.qmd
+      - text: "Datasets"
+        href: aggregations.md
+      - text: "Methods"
+        href: methods.md
+      - text: "Data Coverage"
+        href: data_coverage_descriptives.qmd
     right:
-      - text: "Download documentation"
+      - text: "Documentation PDF"
         href: https://github.com/housinginitiative/era-county-level-dataset-public/blob/449faa9d06e9c4a23bf749edb32d78e9b8f17397/documentation_pdf.pdf
 
 format:
