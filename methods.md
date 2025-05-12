@@ -149,7 +149,7 @@ For each grantee, we calculated the percentage of its records that met all appli
 
 For each grantee, we also calculated the percentage of its aggregate spending in the PHPDF compared to:
 
-- Its total allocation for the applicable program (ERA1 or 2)
+- Its total allocation for the applicable program (ERA1 or 2), inclusive of any reallocations 
 - The amount reported in Treasury's publicly released aggregate summary reporting, which was itself compiled from aggregate reporting submitted by grantees to Treasury
 - The amounts in the above bullet, but calculated at the state level (i.e., PHPDF spending added together for all grantees in a state, divided by aggregate reporting together for all grantees in a state)
 
