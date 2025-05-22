@@ -223,3 +223,7 @@ Taking the data output from the previous step, we grouped the data by variables 
 -   The number of unique assisted addresses
 
 We then suppressed cell values where the number of unique assisted addresses is less than 11, and the corresponding payment amount sum. The suppressed values are encoded with the value `-99999`.
+
+# Codebase
+
+The R scripts used to process the data (as described above) may be found in our [project codebase repository](https://github.com/housinginitiative/era-county-level-dataset-codebase).
