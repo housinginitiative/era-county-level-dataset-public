@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://housinginitiative.github.io/era-county-level-dataset-public/data/aggregated_data/readme.html</loc>
-    <lastmod>2025-07-30T19:53:37.973Z</lastmod>
+    <loc>https://housinginitiative.github.io/era-county-level-dataset-public/index.html</loc>
+    <lastmod>2025-12-01T20:25:39.843Z</lastmod>
   </url>
   <url>
     <loc>https://housinginitiative.github.io/era-county-level-dataset-public/aggregations.html</loc>
-    <lastmod>2025-07-30T19:53:37.969Z</lastmod>
-  </url>
-  <url>
-    <loc>https://housinginitiative.github.io/era-county-level-dataset-public/index.html</loc>
-    <lastmod>2025-07-30T19:53:37.978Z</lastmod>
-  </url>
-  <url>
-    <loc>https://housinginitiative.github.io/era-county-level-dataset-public/data_coverage_descriptives.html</loc>
-    <lastmod>2025-07-30T19:53:37.975Z</lastmod>
+    <lastmod>2025-12-01T20:25:39.834Z</lastmod>
   </url>
   <url>
     <loc>https://housinginitiative.github.io/era-county-level-dataset-public/methods.html</loc>
-    <lastmod>2025-07-30T19:53:37.978Z</lastmod>
+    <lastmod>2025-12-01T20:25:39.843Z</lastmod>
+  </url>
+  <url>
+    <loc>https://housinginitiative.github.io/era-county-level-dataset-public/data/aggregated_data/readme.html</loc>
+    <lastmod>2025-12-01T20:25:39.838Z</lastmod>
+  </url>
+  <url>
+    <loc>https://housinginitiative.github.io/era-county-level-dataset-public/data_coverage_descriptives.html</loc>
+    <lastmod>2025-12-01T20:25:39.840Z</lastmod>
   </url>
 </urlset>
